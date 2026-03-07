@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Знайди свою гітару — Cort</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body { font-family: 'DM Sans', -apple-system, sans-serif; background: #000; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+    a { text-decoration: none; color: inherit; }
+
+    .qnav { position: fixed; top: 0; left: 0; width: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08); z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 56px; }
+    .qnav-logo { font-family: 'DM Serif Display', serif; font-size: 1.3rem; }
+    .qnav-back { display: flex; align-items: center; gap: 6px; color: #2997ff; font-size: 0.88rem; font-weight: 500; }
+    .qnav-back:hover { opacity: 0.8; }
+
+    .quiz-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 80px 20px 40px; }
+
+    .quiz-card { width: 100%; max-width: 640px; background: #1c1c1e; border-radius: 28px; padding: 48px 52px; box-shadow: 0 40px 100px rgba(0,0,0,0.7); }
+
+    .prog-meta { display: flex; justify-content: space-between; font-size: 0.78rem; color: #86868b; margin-bottom: 10px; }
+    .prog-track { height: 3px; background: #2c2c2e; border-radius: 3px; margin-bottom: 36px; overflow: hidden; }
+    .prog-fill { height: 100%; background: #0071e3; border-radius: 3px; width: 0%; transition: width 0.45s ease; }
+
+    .q-eyebrow { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: #0071e3; margin-bottom: 12px; }
+    .q-text { font-family: 'DM Serif Display', serif; font-size: 1.75rem; line-height: 1.25; letter-spacing: -0.4px; color: #fff; margin-bottom: 28px; }
+
+    .opts { display: flex; flex-direction: column; gap: 10px; }
+    .opt { display: flex; align-items: center; gap: 14px; width: 100%; padding: 15px 20px; background: #2c2c2e; border: 1.5px solid transparent; border-radius: 14px; color: #e0e0e0; font-size: 0.97rem; font-family: 'DM Sans', sans-serif; cursor: pointer; text-align: left; transition: background 0.2s, border-color 0.2s, transform 0.15s; }
+    .opt:hover { background: #3a3a3c; border-color: rgba(41,151,255,0.4); transform: translateX(4px); }
+    .opt.sel { background: rgba(0,113,227,0.18); border-color: #0071e3; color: #fff; }
+    .opt-icon { font-size: 1.3rem; flex-shrink: 0; line-height: 1; }
+
+    .nav-row { display: flex; gap: 12px; margin-top: 28px; }
+    .qbtn { padding: 13px 30px; border-radius: 22px; font-size: 0.93rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; transition: transform 0.15s, opacity 0.2s; }
+    .qbtn:hover:not(:disabled) { transform: scale(1.04); }
+    .qbtn:active:not(:disabled) { transform: scale(0.97); }
+    .qbtn:disabled { opacity: 0.28; cursor: not-allowed; }
+    .qbtn-back { background: #2c2c2e; color: #fff; }
+    .qbtn-next { background: #0071e3; color: #fff; flex: 1; }
+
+    .result { text-align: center; }
+    .result-emoji { font-size: 3.5rem; display: block; margin-bottom: 16px; }
+    .result-title { font-family: 'DM Serif Display', serif; font-size: 2.4rem; letter-spacing: -1px; margin-bottom: 12px; }
+    .result-title.acoustic { color: #d4a853; }
+    .result-title.electric  { color: #2997ff; }
+    .result-title.both      { color: #32d74b; }
+    .result-desc { color: #86868b; font-size: 0.97rem; line-height: 1.75; font-weight: 300; margin-bottom: 24px; }
+
+    .score-row { display: flex; gap: 14px; margin-bottom: 24px; }
+    .score-col { flex: 1; }
+    .score-lbl { font-size: 0.76rem; color: #86868b; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 1px; }
+    .score-track { height: 5px; background: #2c2c2e; border-radius: 5px; overflow: hidden; }
+    .score-bar { height: 100%; border-radius: 5px; transition: width 0.9s 0.2s ease; }
+    .score-bar.a { background: #d4a853; }
+    .score-bar.e { background: #2997ff; }
+
+    .models-box { background: #2c2c2e; border-radius: 16px; padding: 20px 24px; text-align: left; margin-bottom: 24px; }
+    .models-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: #0071e3; margin-bottom: 14px; display: block; }
+    .model-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .model-row:last-child { border-bottom: none; }
+    .model-icon { font-size: 1.3rem; }
+    .model-name { font-size: 0.93rem; font-weight: 500; }
+    .model-sub  { font-size: 0.78rem; color: #86868b; margin-top: 2px; }
+
+    .result-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .rbtn { padding: 13px 26px; border-radius: 22px; font-size: 0.92rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; transition: transform 0.15s; }
+    .rbtn:hover { transform: scale(1.04); }
+    .rbtn-primary   { background: #0071e3; color: #fff; }
+    .rbtn-secondary { background: #3a3a3c; color: #fff; }
+
+    @media (max-width: 600px) {
+      .qnav { padding: 0 20px; }
+      .quiz-wrap { padding: 72px 14px 32px; }
+      .quiz-card { padding: 32px 22px; border-radius: 22px; }
+      .q-text { font-size: 1.4rem; }
+      .qbtn { padding: 12px 16px; font-size: 0.88rem; }
+      .result-title { font-size: 1.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="qnav">
+  <a href="index.html" class="qnav-back">&#8592; На головну</a>
+  <span class="qnav-logo">Cort</span>
+  <span style="width:80px"></span>
+</nav>
+
+<div class="quiz-wrap">
+  <div class="quiz-card" id="quizCard">
+
+    <div class="prog-meta">
+      <span id="lblStep">Питання 1 з 6</span>
+      <span id="lblPct">0%</span>
+    </div>
+    <div class="prog-track">
+      <div class="prog-fill" id="progFill"></div>
+    </div>
+
+    <div id="viewQ">
+      <span class="q-eyebrow" id="eyebrow"></span>
+      <p class="q-text" id="qtext"></p>
+      <div class="opts" id="opts"></div>
+      <div class="nav-row">
+        <button class="qbtn qbtn-back" id="btnBack" type="button">&#8592; Назад</button>
+        <button class="qbtn qbtn-next" id="btnNext" type="button" disabled>Далі &#8594;</button>
+      </div>
+    </div>
+
+    <div id="viewR" style="display:none;"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+var QS = [
+  { ey:"Крок 1 — Стиль", tx:"Який стиль музики ти найчастіше граєш або хочеш грати?",
+    opts:[{ic:"🌿",lb:"Поп / Фолк / Кантрі",a:1,e:0},{ic:"🔥",lb:"Рок / Метал / Блюз",a:0,e:1},{ic:"🎵",lb:"Різні стилі",a:1,e:1}]},
+  { ey:"Крок 2 — Мета", tx:"Де ти плануєш грати на гітарі?",
+    opts:[{ic:"🏠",lb:"Вдома, для себе",a:1,e:1},{ic:"🎤",lb:"На сцені / у групі",a:0,e:1},{ic:"🌍",lb:"На вулиці / у подорожах",a:1,e:0}]},
+  { ey:"Крок 3 — Досвід", tx:"Який у тебе рівень гри на гітарі?",
+    opts:[{ic:"🌱",lb:"Новачок",a:1,e:0},{ic:"🎸",lb:"Середній рівень",a:1,e:1},{ic:"⚡",lb:"Професіонал",a:0,e:1}]},
+  { ey:"Крок 4 — Бюджет", tx:"Скільки ти готовий витратити на гітару?",
+    opts:[{ic:"💵",lb:"До $300",a:1,e:0},{ic:"💴",lb:"$300 – $800",a:1,e:1},{ic:"💎",lb:"$800 і більше",a:0,e:1}]},
+  { ey:"Крок 5 — Звучання", tx:"Що для тебе важливіше в гітарі?",
+    opts:[{ic:"🌊",lb:"М'яке, натуральне звучання та акорди",a:1,e:0},{ic:"🔊",lb:"Гучний звук, ефекти, драйв",a:0,e:1}]},
+  { ey:"Крок 6 — Зручність", tx:"Де ти будеш зберігати та носити гітару?",
+    opts:[{ic:"🎒",lb:"Хочу легко переносити, без підсилювача",a:1,e:0},{ic:"🏠",lb:"Є місце вдома, маю або планую підсилювач",a:0,e:1}]}
+];
+
+var AM = [
+  {ic:"🎸",nm:"Gold-Passion",   sb:"Преміальна серія, ялина + mahogany"},
+  {ic:"🎸",nm:"Essence-OC4",    sb:"Торрефікована ялина, Fishman preamp"},
+  {ic:"🎸",nm:"AD810 Standart", sb:"Доступна класика для початківців"}
+];
+var EM = [
+  {ic:"⚡",nm:"Storm X1",       sb:"Humbucker, корпус mahogany"},
+  {ic:"⚡",nm:"Manson Classic",  sb:"Ретро-дизайн, широкий діапазон тонів"},
+  {ic:"⚡",nm:"G110-BKS",        sb:"Преміум серія, матовий чорний"}
+];
+
+var step  = 0;
+var picks = [];
+for (var pi = 0; pi < QS.length; pi++) picks.push(null);
+
+function draw() {
+  var q   = QS[step];
+  var tot = QS.length;
+  var pct = Math.round((step / tot) * 100);
+
+  document.getElementById("lblStep").textContent  = "Питання " + (step+1) + " з " + tot;
+  document.getElementById("lblPct").textContent   = pct + "%";
+  document.getElementById("progFill").style.width = pct + "%";
+  document.getElementById("eyebrow").textContent  = q.ey;
+  document.getElementById("qtext").textContent    = q.tx;
+
+  var box = document.getElementById("opts");
+  box.innerHTML = "";
+
+  for (var i = 0; i < q.opts.length; i++) {
+    (function(idx) {
+      var o   = q.opts[idx];
+      var btn = document.createElement("button");
+      btn.type      = "button";
+      btn.className = "opt" + (picks[step] === idx ? " sel" : "");
+
+      var ic = document.createElement("span");
+      ic.className   = "opt-icon";
+      ic.textContent = o.ic;
+
+      var lb = document.createElement("span");
+      lb.textContent = o.lb;
+
+      btn.appendChild(ic);
+      btn.appendChild(lb);
+
+      btn.addEventListener("click", function() {
+        picks[step] = idx;
+        draw();
+      });
+
+      box.appendChild(btn);
+    })(i);
+  }
+
+  document.getElementById("btnBack").disabled = (step === 0);
+  document.getElementById("btnNext").disabled = (picks[step] === null);
+  document.getElementById("btnNext").textContent = (step === tot - 1) ? "Результат 🎉" : "Далі →";
+}
+
+document.getElementById("btnBack").addEventListener("click", function() {
+  if (step > 0) { step--; draw(); }
+});
+
+document.getElementById("btnNext").addEventListener("click", function() {
+  if (picks[step] === null) return;
+  if (step < QS.length - 1) { step++; draw(); }
+  else showResult();
+});
+
+function showResult() {
+  var sa = 0, se = 0;
+  for (var i = 0; i < QS.length; i++) {
+    if (picks[i] !== null) { sa += QS[i].opts[picks[i]].a; se += QS[i].opts[picks[i]].e; }
+  }
+
+  document.getElementById("lblStep").textContent  = "Результат";
+  document.getElementById("lblPct").textContent   = "100%";
+  document.getElementById("progFill").style.width = "100%";
+  document.getElementById("viewQ").style.display  = "none";
+
+  var type, emoji, title, desc, models, link;
+  if (sa > se) {
+    type="acoustic"; emoji="🎸"; title="Акустична гітара";
+    desc="Виходячи з твоїх відповідей, акустична гітара — ідеальний вибір. Вона не потребує підсилювача, зручна вдома та в подорожах і ідеально підходить для твого стилю.";
+    models=AM; link="index.html#section1";
+  } else if (se > sa) {
+    type="electric"; emoji="⚡"; title="Електрогітара";
+    desc="Твій стиль і цілі вказують на електрогітару. З підсилювачем ти отримаєш потужне звучання, нескінченні ефекти та ідеальний інструмент для сцени.";
+    models=EM; link="index.html#electric-guitars";
+  } else {
+    type="both"; emoji="🎵"; title="Обидві підійдуть!";
+    desc="Твої відповіді розподілились порівну. Обидва типи гітар тобі підходять — орієнтуйся на стиль та бюджет.";
+    models=[AM[0],AM[1],EM[0],EM[1]]; link="index.html#section1";
+  }
+
+  var tot2 = sa + se || 1;
+  var aPct = Math.round((sa/tot2)*100);
+  var ePct = Math.round((se/tot2)*100);
+
+  var mh = "";
+  for (var j = 0; j < models.length; j++) {
+    mh += '<div class="model-row"><span class="model-icon">'+models[j].ic+'</span><div><div class="model-name">'+models[j].nm+'</div><div class="model-sub">'+models[j].sb+'</div></div></div>';
+  }
+
+  var rv = document.getElementById("viewR");
+  rv.style.display = "block";
+  rv.innerHTML =
+    '<div class="result">'+
+    '<span class="result-emoji">'+emoji+'</span>'+
+    '<div class="result-title '+type+'">'+title+'</div>'+
+    '<p class="result-desc">'+desc+'</p>'+
+    '<div class="score-row">'+
+      '<div class="score-col"><div class="score-lbl">Акустика</div><div class="score-track"><div class="score-bar a" id="sba" style="width:0%"></div></div></div>'+
+      '<div class="score-col"><div class="score-lbl">Електро</div><div class="score-track"><div class="score-bar e" id="sbe" style="width:0%"></div></div></div>'+
+    '</div>'+
+    '<div class="models-box"><span class="models-label">Рекомендовані моделі</span>'+mh+'</div>'+
+    '<div class="result-btns">'+
+      '<button class="rbtn rbtn-primary" onclick="location.href=\''+link+'\'">Переглянути гітари &#8594;</button>'+
+      '<button class="rbtn rbtn-secondary" onclick="restartQuiz()">Пройти ще раз</button>'+
+    '</div>'+
+    '</div>';
+
+  setTimeout(function() {
+    var a = document.getElementById("sba"), e = document.getElementById("sbe");
+    if (a) a.style.width = aPct+"%";
+    if (e) e.style.width = ePct+"%";
+  }, 80);
+}
+
+function restartQuiz() {
+  step = 0;
+  picks = [];
+  for (var ri = 0; ri < QS.length; ri++) picks.push(null);
+  document.getElementById("viewQ").style.display = "block";
+  document.getElementById("viewR").style.display = "none";
+  document.getElementById("viewR").innerHTML = "";
+  draw();
+}
+
+document.addEventListener("DOMContentLoaded", function() { draw(); });
+</script>
+
+</body>
+</html>

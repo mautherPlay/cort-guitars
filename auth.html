@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Реєстрація / Вхід Cort</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Минимальные стили для формы */
+    .auth-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #edefea, #d8d8d8);
+    }
+    .auth-card {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+    .auth-card h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+    .auth-card input {
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    .auth-card button {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 8px;
+      border: none;
+      background: #464845;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+    }
+    .auth-card button:hover {
+      opacity: 0.9;
+    }
+    .auth-card p {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .auth-card p a {
+      color: #464845;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+<section class="auth-section">
+  <div class="auth-card">
+    <h2>Реєстрація / Вхід</h2>
+
+    <!-- Регистрация -->
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="password" id="regPassword" placeholder="Пароль">
+    <button id="registerBtn">Зареєструватися</button>
+
+    <hr style="margin: 1.5rem 0;">
+
+    <!-- Вход -->
+    <input type="email" id="loginEmail" placeholder="Email для входу">
+    <input type="password" id="loginPassword" placeholder="Пароль">
+    <button id="loginBtn">Увійти</button>
+
+    <p>Повернутися на <a href="index.html">головну сторінку</a></p>
+  </div>
+</section>
+
+<script type="module">
+import { auth } from './js/firebase.js';
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+// Регистрация
+const registerBtn = document.getElementById("registerBtn");
+registerBtn.addEventListener("click", () => {
+  const email = document.getElementById("regEmail").value;
+  const password = document.getElementById("regPassword").value;
+
+  if (!email || !password) {
+    alert("Будь ласка, введіть Email та пароль для реєстрації!");
+    return;
+  }
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Реєстрація успішна! Тепер можете увійти.");
+    })
+    .catch(error => {
+      alert("Помилка: " + error.message);
+    });
+});
+
+// Вход
+const loginBtn = document.getElementById("loginBtn");
+loginBtn.addEventListener("click", () => {
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  if (!email || !password) {
+    alert("Будь ласка, введіть Email та пароль для входу!");
+    return;
+  }
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Вхід успішний!");
+      window.location.href = "index.html";
+    })
+    .catch(error => {
+      alert("Помилка: " + error.message);
+    });
+});
+
+// Скрываем кнопку "Зареєструватися" на главной странице, если пользователь вошёл
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const registerBtnMain = window.opener?.document.querySelector('header.navbar nav a.btn') 
+                            || document.querySelector('header.navbar nav a.btn');
+    if (registerBtnMain) registerBtnMain.style.display = 'none';
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cort Guitars</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="navbar">
+  <div class="navbar-container">
+    <div class="logo">Cort</div>
+
+    <nav class="nav-left" id="navLeft">
+
+      <div class="nav-dropdown" id="dd-guitars">
+        <button class="nav-dropdown-trigger" aria-expanded="false">Гітари</button>
+        <div class="nav-dropdown-menu">
+          <a href="#section1"><span class="dd-icon">&#127928;</span> Акустичні гітари</a>
+          <a href="#electric-guitars"><span class="dd-icon">&#9889;</span> Електрогітари</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" id="dd-about">
+        <button class="nav-dropdown-trigger" aria-expanded="false">Про нас</button>
+        <div class="nav-dropdown-menu">
+          <a href="#about-premium"><span class="dd-icon">&#127981;</span> Про компанію</a>
+          <a href="about-developer.html"><span class="dd-icon">&#128104;&#8205;&#128187;</span> Про розробника</a>
+        </div>
+      </div>
+
+      <a href="blog.html">Корисні статті</a>
+      <a href="game.html" class="game-btn">&#127928; Guitar Game</a>
+    </nav>
+
+    <div class="nav-right">
+      <a href="auth.html" class="btn" id="registerBtn">Увійти</a>
+      <div id="userContainer" style="display:none; align-items:center; gap:0.5rem;">
+        <img src="images/user-icon.png" alt="User" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">
+        <span id="userName" style="font-size:0.82rem;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#232323;"></span>
+      </div>
+      <a href="https://www.youtube.com/@CortGuitarCo" class="yt-btn" title="YouTube" target="_blank" rel="noopener">
+        <img src="images/youtube-logo.png" alt="YouTube">
+      </a>
+    </div>
+
+    <button class="burger" id="burgerBtn" aria-label="Меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-content">
+    <h1>Cort Guitars</h1>
+    <p>Інструменти, що надихають</p>
+    <a href="guitar-quiz.html" class="btn btn-quiz">&#127926; Знайди свою гітару</a>
+  </div>
+</section>
+
+<!-- КЛАСИЧНІ ГІТАРИ -->
+<section id="section1">
+  <span class="section-eyebrow">Акустика</span>
+  <h2 class="section-title">Класичні гітари</h2>
+  <div class="cards-container">
+    <div class="card">
+      <img src="images/Cort1.jpg" alt="Gold-Passion">
+      <div class="card-body">
+        <h3>Gold-Passion</h3>
+        <p>Натуральний блиск.</p>
+        <button class="details-btn" data-index="0">Детальніше</button>
+      </div>
+    </div>
+    <div class="card">
+      <img src="images/Cort2.jpg" alt="Essence-OC4">
+      <div class="card-body">
+        <h3>Essence-OC4</h3>
+        <p>Натуральний напівглянц.</p>
+        <button class="details-btn" data-index="1">Детальніше</button>
+      </div>
+    </div>
+    <div class="card">
+      <img src="images/Cort3.jpg" alt="AD810 Standart">
+      <div class="card-body">
+        <h3>AD810 Standart</h3>
+        <p>Відкритопориста структура.</p>
+        <button class="details-btn" data-index="2">Детальніше</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Модалка класичних гітар -->
+<div id="guitarSectionModal" class="modal">
+  <div class="modal-content">
+    <span id="closeSectionModal" class="close">&times;</span>
+    <img id="modalSectionImg" src="" alt="">
+    <h3 id="modalSectionTitle"></h3>
+    <p id="modalSectionDesc"></p>
+  </div>
+</div>
+
+<!-- ХАРАКТЕРИСТИКИ АКУСТИЧНИХ — BENTO -->
+<section id="features" class="apple-features-section">
+  <div class="apple-section-header">
+    <span class="section-eyebrow">Деталі, що мають значення</span>
+    <h2>Акустика без компромісів</h2>
+    <p>Кожен елемент гітари Cort ретельно підібраний для досягнення ідеального балансу тепла, чіткості та резонансу.</p>
+  </div>
+  <div class="apple-bento">
+
+    <div class="bento-cell bento-cell--large bento-cell--dark">
+      <img src="images/strings.jpg" alt="Струни" class="bento-cell__img">
+      <div class="bento-cell__overlay"></div>
+      <div class="bento-cell__body">
+        <span class="bento-cell__eyebrow"><span class="bento-cell__dot"></span>Звучання</span>
+        <h3 class="bento-cell__title">Струни</h3>
+        <p class="bento-cell__desc">Якісні струни для чистого і насиченого звучання. Ретельно підібрані матеріали забезпечують точний тон і тривалий термін служби.</p>
+        <button class="bento-cell__btn feature-btn" data-feature="strings">Детальніше</button>
+      </div>
+    </div>
+
+    <div class="bento-cell bento-cell--medium bento-cell--stone">
+      <img src="images/wood.jpg" alt="Дерево" class="bento-cell__img">
+      <div class="bento-cell__overlay"></div>
+      <div class="bento-cell__body">
+        <span class="bento-cell__eyebrow"><span class="bento-cell__dot"></span>Матеріал</span>
+        <h3 class="bento-cell__title">Відбірна деревина</h3>
+        <p class="bento-cell__desc">Резонансна ялина, кедр, махагоні — тонко відібрана деревина для кожної моделі.</p>
+        <button class="bento-cell__btn feature-btn" data-feature="wood">Детальніше</button>
+      </div>
+    </div>
+
+    <div class="bento-cell bento-cell--medium-r bento-cell--blue">
+      <img src="images/opencore.jpg" alt="Open Core" class="bento-cell__img">
+      <div class="bento-cell__overlay"></div>
+      <div class="bento-cell__body">
+        <span class="bento-cell__eyebrow"><span class="bento-cell__dot"></span>Технологія</span>
+        <h3 class="bento-cell__title">Open Core</h3>
+        <p class="bento-cell__desc">Інноваційна конструкція резонансної камери підсилює кожну ноту.</p>
+        <button class="bento-cell__btn feature-btn" data-feature="open-core">Детальніше</button>
+      </div>
+    </div>
+
+    <div class="bento-cell bento-cell--large-r bento-cell--cream">
+      <img src="images/finish.jpg" alt="Обробка" class="bento-cell__img">
+      <div class="bento-cell__overlay-light"></div>
+      <div class="bento-cell__body bento-cell__body--light">
+        <span class="bento-cell__eyebrow">Естетика</span>
+        <h3 class="bento-cell__title bento-cell__title--dark">Ексклюзивна обробка</h3>
+        <p class="bento-cell__desc bento-cell__desc--dark">Лакування та полірування — не лише захист, але й здатність деревини дихати і набирати тон з роками.</p>
+        <button class="bento-cell__btn bento-cell__btn--dark feature-btn" data-feature="finish">Детальніше</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Модалка характеристик класичних -->
+<div id="featureModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <img id="featureModalImg" src="" alt="">
+    <h3 id="featureModalTitle"></h3>
+    <p id="featureModalDesc"></p>
+    <video id="featureModalVideo" controls style="width:100%;margin-top:1rem;">
+      <source src="" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<!-- ELECTRIC HERO -->
+<div class="electric-hero">
+  <video class="electric-video" autoplay muted loop playsinline>
+    <source src="videos/electric-hero.mp4" type="video/mp4">
+  </video>
+  <h2 class="electric-title">Електрогітари</h2>
+</div>
+
+<!-- ЕЛЕКТРОГІТАРИ — КАРТКИ -->
+<section id="electric-guitars">
+  <span class="section-eyebrow">Електро</span>
+  <h2 class="section-title">Електрогітари</h2>
+  <div class="card-container">
+    <div class="electric-card">
+      <div class="electric-img"><img src="images/x1.jpg" alt="Storm X1"></div>
+      <div class="electric-text">
+        <h3>Storm X1</h3>
+        <p>Потужний звук для сцени. Два хамбакери, корпус з махагоні.</p>
+        <button class="guitar-btn" data-guitar="storm">Детальніше</button>
+      </div>
+    </div>
+    <div class="electric-card">
+      <div class="electric-img"><img src="images/Manson.jpg" alt="Manson Classic"></div>
+      <div class="electric-text">
+        <h3>Manson Classic</h3>
+        <p>Ідеальна для соло. Легкий корпус та швидкий гриф.</p>
+        <button class="guitar-btn" data-guitar="phantom">Детальніше</button>
+      </div>
+    </div>
+    <div class="electric-card">
+      <div class="electric-img"><img src="images/G110-BKS.jpg" alt="G110-BKS"></div>
+      <div class="electric-text">
+        <h3>G110-BKS</h3>
+        <p>Преміум серія з покращеною електронікою.</p>
+        <button class="guitar-btn" data-guitar="nova">Детальніше</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Модалка електрогітар -->
+<div id="guitarModal" class="modal">
+  <div class="modal-content">
+    <span id="closeGuitarModal" class="close">&times;</span>
+    <img id="guitarModalImg" src="" alt="">
+    <h3 id="guitarModalTitle"></h3>
+    <p id="guitarModalDesc"></p>
+  </div>
+</div>
+
+<!-- ХАРАКТЕРИСТИКИ ЕЛЕКТРОГІТАР — BENTO -->
+<section id="electric-features" class="apple-features-section">
+  <div class="apple-section-header">
+    <span class="section-eyebrow">Під капотом</span>
+    <h2>Інженерія звуку</h2>
+    <p>Від пікапів до хедстоку — кожна деталь відточена для максимальної потужності та точності на сцені.</p>
+  </div>
+  <div class="apple-bento">
+
+    <div class="bento-cell bento-cell--large bento-cell--stone">
+      <img src="images/pickups.jpg" alt="Пікапи" class="bento-cell__img">
+      <div class="bento-cell__overlay"></div>
+      <div class="bento-cell__body">
+        <span class="bento-cell__eyebrow"><span class="bento-cell__dot"></span>Серце звуку</span>
+        <h3 class="bento-cell__title">Пікапи</h3>
+        <p class="bento-cell__desc">Humbucker-пікапи Cort — потужне, насичене звучання з мінімумом шумів. Від теплого джазу до агресивного металу.</p>
+        <button class="bento-cell__btn feature-btn" data-feature="pickups">Детальніше</button>
+      </div>
+    </div>
+
+    <div class="bento-cell bento-cell--medium bento-cell--dark">
+      <img src="images/body.jpg" alt="Корпус" class="bento-cell__img">
+      <div class="bento-cell__overlay"></div>
+      <div class="bento-cell__body">
+        <span class="bento-cell__eyebrow"><span class="bento-cell__dot"></span>Конструкція</span>
+        <h3 class="bento-cell__title">Корпус</h3>
+        <p class="bento-cell__desc">Легкий, резонансний, ергономічний. Форма і деревина — обрані разом для ідеального балансу.</p>
+        <button class="bento-cell__btn feature-btn" data-feature="body">Детальніше</button>
+      </div>
+    </div>
+
+    <div class="bento-cell bento-cell--medium-r bento-cell--cream">
+      <img src="images/neck.jpg" alt="Гриф" class="bento-cell__img">
+      <div class="bento-cell__overlay-light"></div>
+      <div class="bento-cell__body bento-cell__body--light">
+        <span class="bento-cell__eyebrow">Комфорт</span>
+        <h3 class="bento-cell__title bento-cell__title--dark">Гриф</h3>
+        <p class="bento-cell__desc bento-cell__desc--dark">C-shape профіль, ятоба або палісандр — гриф, що рухається разом з тобою.</p>
+        <button class="bento-cell__btn bento-cell__btn--dark feature-btn" data-feature="neck">Детальніше</button>
+      </div>
+    </div>
+
+    <div class="bento-cell bento-cell--large-r bento-cell--blue">
+      <img src="images/bridge.jpg" alt="Хедсток" class="bento-cell__img">
+      <div class="bento-cell__overlay"></div>
+      <div class="bento-cell__body">
+        <span class="bento-cell__eyebrow"><span class="bento-cell__dot"></span>Стабільність</span>
+        <h3 class="bento-cell__title">Хедсток</h3>
+        <p class="bento-cell__desc">Точна механіка утримує стрій навіть після найекстремальніших виступів. Ніяких компромісів.</p>
+        <button class="bento-cell__btn feature-btn" data-feature="bridge">Детальніше</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Модалка характеристик електрогітар -->
+<div id="electricFeaturesModal" class="modal">
+  <div class="modal-content">
+    <span id="closeElectricModal" class="close">&times;</span>
+    <img id="electricModalImg" src="" alt="">
+    <h3 id="electricModalTitle"></h3>
+    <p id="electricModalDesc"></p>
+  </div>
+</div>
+
+<!-- ПРО НАС -->
+<section id="about-premium">
+  <div class="about-row">
+    <div class="about-content">
+      <h2>Наша філософія</h2>
+      <p>Ми створюємо інструменти, що передають характер. Кожна гітара — це поєднання інженерії та мистецтва.</p>
+    </div>
+    <div class="about-media">
+      <video src="videos/about1.mp4" autoplay muted loop playsinline></video>
+      <button class="sound-toggle">&#128263;</button>
+    </div>
+  </div>
+  <div class="about-row reverse">
+    <div class="about-content">
+      <h2>Матеріали преміум-класу</h2>
+      <p>Відбірна деревина та точна обробка створюють глибину звучання. Якість відчувається з першої ноти.</p>
+    </div>
+    <div class="about-media">
+      <video src="videos/about2.mp4" autoplay muted loop playsinline></video>
+      <button class="sound-toggle">&#128263;</button>
+    </div>
+  </div>
+  <div class="about-row">
+    <div class="about-content">
+      <h2>Натхнення музикою</h2>
+      <p>Ми не просто виробляємо гітари. Ми створюємо інструменти для емоцій.</p>
+    </div>
+    <div class="about-media">
+      <video src="videos/about3.mp4" autoplay muted loop playsinline></video>
+      <button class="sound-toggle">&#128263;</button>
+    </div>
+  </div>
+</section>
+
+<!-- ЗНАМЕНИТІ МУЗИКАНТИ -->
+<section id="celebrities" class="celeb-section">
+  <h2 class="celeb-title reveal">Музиканти, що обрали Cort</h2>
+  <div class="celeb-container">
+    <div class="celeb-card reveal">
+      <img src="images/celeb1.jpg" alt="Марк Голкомб">
+      <div class="celeb-info"><h3>Марк Голкомб</h3><p>Гітарист гурту Periphery.</p></div>
+    </div>
+    <div class="celeb-card reveal">
+      <img src="images/celeb2.jpg" alt="Карлос Сантана">
+      <div class="celeb-info"><h3>Карлос Сантана</h3><p>Легендарний рок- та латин-гітарист.</p></div>
+    </div>
+    <div class="celeb-card reveal">
+      <img src="images/celeb3.jpg" alt="Алексі Лайхо">
+      <div class="celeb-info"><h3>Алексі Лайхо</h3><p>Гітарист Children of Bodom.</p></div>
+    </div>
+    <div class="celeb-card reveal">
+      <img src="images/celeb4.jpg" alt="Майк Олдфілд">
+      <div class="celeb-info"><h3>Майк Олдфілд</h3><p>Мультиінструменталіст.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+
+  <div class="footer-top">
+
+    <div class="footer-info">
+      <div class="footer-logo">Cort</div>
+      <p class="footer-tagline">Інструменти, що надихають.</p>
+      <div class="footer-contacts">
+        <p>&#128205; Одеса, Україна</p>
+        <p>&#128222; +380 50 333 81 88</p>
+        <p>&#9993; <a href="mailto:support@cortguitars.com">support@cortguitars.com</a></p>
+      </div>
+      <div class="footer-socials">
+        <a href="https://www.facebook.com/CortGuitarCo/?locale=ru_RU" aria-label="Facebook">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/cort_guitars/" aria-label="Instagram">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@CortGuitarCo" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#fff"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-form">
+      <h3>Залиште повідомлення</h3>
+      <form id="contactForm">
+        <input type="text" name="name" placeholder="Ім'я" required>
+        <textarea name="message" placeholder="Повідомлення" required></textarea>
+        <button type="submit" class="btn">Відправити</button>
+        <p id="formStatus" class="form-status"></p>
+      </form>
+    </div>
+
+    <div class="footer-faq">
+      <h3>FAQ</h3>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Як знайти підходящу гітару?</summary>
+          <p>Пройди наш <a href="guitar-quiz.html">тест підбору гітари</a> — 6 запитань і ти отримаєш персональну рекомендацію з моделями Cort.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Чим акустична гітара відрізняється від електро?</summary>
+          <p>Акустична не потребує підсилювача — ідеальна для дому та вулиці. Електрогітара підходить для сцени та складних стилів, але потребує підсилювач.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Що таке Guitar Game?</summary>
+          <p>Ритм-гра прямо у браузері. Треба влучати в ноти в такт музиці. Доступна після входу в акаунт, є кілька рівнів і таблиця рекордів.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Як зареєструватися на сайті?</summary>
+          <p>Натисни «Увійти» у верхній панелі. Реєстрація і вхід — на одній сторінці, просто введи email та пароль.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Де написати розробнику?</summary>
+          <p>Заповни форму поруч (потрібен акаунт), або напиши на <a href="mailto:support@cortguitars.com">support@cortguitars.com</a>.</p>
+        </details>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-left">
+      <span>&copy; 2025 Cort Guitars Ukraine. Всі права захищені.</span>
+    </div>
+    <div class="footer-bottom-center">
+      <a href="privacy.html">Політика конфіденційності</a>
+      <a href="terms.html">Умови використання</a>
+      <a href="about-developer.html">Про розробника</a>
+    </div>
+    <div class="footer-bottom-right">
+      <span>&#127925; Музика в Guitar Game аранжована автором у TuxGuitar. Авторські права на аудіозаписи належать розробнику.</span>
+    </div>
+  </div>
+
+</footer>
+
+<!-- FIREBASE COMPAT (для footer.js) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script>
+  if (!firebase.apps.length) {
+    firebase.initializeApp({
+      apiKey: "AIzaSyDTrXDCi_O9UMQRbP5tqvstgZZxq5y9kmA",
+      authDomain: "useraut-58945.firebaseapp.com",
+      projectId: "useraut-58945",
+      storageBucket: "useraut-58945.firebasestorage.app",
+      messagingSenderId: "181937486925",
+      appId: "1:181937486925:web:9257dd4a234abf4ec47004"
+    });
+  }
+</script>
+
+<!-- ЗВИЧАЙНІ СКРИПТИ -->
+<script src="js/heroSlider.js"></script>
+<script src="js/guitarModal.js"></script>
+<script src="js/electric-features.js"></script>
+<script src="js/scroll.js"></script>
+<script src="js/about.js"></script>
+<script src="js/about-celeb.js"></script>
+<script src="js/footer.js"></script>
+
+<!-- МОДУЛЬНІ СКРИПТИ -->
+<script type="module" src="js/electric.js"></script>
+<script type="module" src="js/features.js"></script>
+<script type="module" src="js/userStatus.js"></script>
+
+<!-- BENTO SCROLL-REVEAL -->
+<script>
+(function () {
+  function initReveal() {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.apple-section-header').forEach(function(el) { io.observe(el); });
+    document.querySelectorAll('.bento-cell').forEach(function(el) { io.observe(el); });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initReveal);
+  } else {
+    initReveal();
+  }
+})();
+</script>
+
+<!-- БЛОКУВАННЯ ГРИ (module) -->
+<script type="module">
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+var cfg = {
+  apiKey: "AIzaSyDTrXDCi_O9UMQRbP5tqvstgZZxq5y9kmA",
+  authDomain: "useraut-58945.firebaseapp.com",
+  projectId: "useraut-58945",
+  storageBucket: "useraut-58945.firebasestorage.app",
+  messagingSenderId: "181937486925",
+  appId: "1:181937486925:web:9257dd4a234abf4ec47004"
+};
+var app = getApps().length ? getApps()[0] : initializeApp(cfg);
+var auth = getAuth(app);
+var gameBtn = document.querySelector(".game-btn");
+if (gameBtn) {
+  gameBtn.addEventListener("click", function(e) {
+    if (!auth.currentUser) { e.preventDefault(); alert("Щоб грати, увійдіть на свій акаунт."); }
+  });
+}
+</script>
+
+<!-- ГАМБУРГЕР + DROPDOWN -->
+<script>
+(function() {
+  var burger  = document.getElementById("burgerBtn");
+  var navLeft = document.getElementById("navLeft");
+
+  burger.addEventListener("click", function() {
+    var isOpen = navLeft.classList.toggle("open");
+    burger.classList.toggle("active", isOpen);
+    burger.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  navLeft.querySelectorAll("a").forEach(function(link) {
+    link.addEventListener("click", function() {
+      navLeft.classList.remove("open");
+      burger.classList.remove("active");
+      burger.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  document.querySelectorAll(".nav-dropdown").forEach(function(dd) {
+    var trigger = dd.querySelector(".nav-dropdown-trigger");
+    trigger.addEventListener("click", function(e) {
+      e.stopPropagation();
+      var isOpen = dd.classList.toggle("open");
+      trigger.setAttribute("aria-expanded", String(isOpen));
+    });
+  });
+
+  document.addEventListener("click", function(e) {
+    if (!e.target.closest(".nav-dropdown")) {
+      document.querySelectorAll(".nav-dropdown.open").forEach(function(dd) {
+        dd.classList.remove("open");
+        dd.querySelector(".nav-dropdown-trigger").setAttribute("aria-expanded", "false");
+      });
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

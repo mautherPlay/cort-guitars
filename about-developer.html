@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Про розробника — Cort Guitars</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-head: 'DM Serif Display', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+      --black:  #1d1d1f;
+      --gray-1: #424245;
+      --gray-2: #6e6e73;
+      --gray-bg: #f5f5f7;
+      --white:  #ffffff;
+      --accent: #0071e3;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--black);
+      background: var(--white);
+      line-height: 1.6;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ── Navbar ── */
+    .dev-nav {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 60px;
+    }
+
+    .dev-nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.3rem;
+      color: var(--black);
+    }
+
+    .dev-nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--accent);
+      transition: opacity 0.2s;
+    }
+
+    .dev-nav-back:hover { opacity: 0.75; }
+
+    /* ── Hero ── */
+    .dev-hero {
+      padding-top: 60px;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #1d1d1f 0%, #2c2c2e 50%, #1d1d1f 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Декоративні кола */
+    .dev-hero::before {
+      content: "";
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,113,227,0.15), transparent 70%);
+      top: -100px; right: -100px;
+      pointer-events: none;
+    }
+
+    .dev-hero::after {
+      content: "";
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(221,36,118,0.1), transparent 70%);
+      bottom: -80px; left: -80px;
+      pointer-events: none;
+    }
+
+    .dev-hero-inner {
+      display: flex;
+      align-items: center;
+      gap: 6rem;
+      max-width: 1100px;
+      width: 100%;
+      padding: 4rem 3rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Фото */
+    .dev-photo-wrap {
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .dev-photo-main {
+      width: 320px;
+      height: 400px;
+      border-radius: 28px;
+      object-fit: cover;
+      object-position: top;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+    }
+
+    /* Плашка з ім'ям під фото */
+    .dev-photo-badge {
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 8px 22px;
+      white-space: nowrap;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+      letter-spacing: 0.5px;
+    }
+
+    .dev-hero-text { flex: 1; }
+
+    .dev-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .dev-hero-text h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 1.5rem;
+    }
+
+    .dev-hero-text .subtitle {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.65);
+      font-weight: 300;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+    }
+
+    /* Бейджі */
+    .dev-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .dev-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.85);
+    }
+
+    /* ── Секція фактів ── */
+    .dev-facts {
+      background: var(--gray-bg);
+      padding: 6rem 3rem;
+    }
+
+    .dev-facts-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .dev-facts h2 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400;
+      letter-spacing: -1px;
+      margin-bottom: 3.5rem;
+    }
+
+    .dev-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .dev-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: left;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .dev-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+    }
+
+    .dev-card-icon { font-size: 2rem; margin-bottom: 1rem; }
+
+    .dev-card h3 {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .dev-card p {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--black);
+      line-height: 1.5;
+    }
+
+    .dev-card .sub {
+      font-size: 0.85rem;
+      color: var(--gray-2);
+      margin-top: 0.3rem;
+      font-weight: 400;
+    }
+
+    /* ── Секція "Про проєкт" ── */
+    .dev-project {
+      background: var(--white);
+      padding: 6rem 3rem;
+    }
+
+    .dev-project-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .dev-project-text h2 {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 400;
+      letter-spacing: -0.8px;
+      margin-bottom: 1.2rem;
+    }
+
+    .dev-project-text p {
+      color: var(--gray-2);
+      line-height: 1.8;
+      font-size: 1rem;
+      font-weight: 300;
+      margin-bottom: 1rem;
+    }
+
+    /* Стек технологій */
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 1.5rem;
+    }
+
+    .tech-tag {
+      padding: 5px 13px;
+      border-radius: 20px;
+      background: var(--gray-bg);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--gray-1);
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .dev-project-photo {
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+      aspect-ratio: 4/5;
+    }
+
+    .dev-project-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ── Галерея фото ── */
+    .dev-gallery {
+      background: var(--black);
+      padding: 6rem 3rem;
+    }
+
+    .dev-gallery h2 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400;
+      letter-spacing: -1px;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .dev-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .dev-gallery-grid img {
+      border-radius: 16px;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      width: 100%;
+      transition: transform 0.4s, opacity 0.4s;
+      opacity: 0.85;
+    }
+
+    .dev-gallery-grid img:hover {
+      transform: scale(1.03);
+      opacity: 1;
+    }
+
+    /* Плейсхолдер для відсутніх фото */
+    .photo-placeholder {
+      border-radius: 16px;
+      aspect-ratio: 3/4;
+      background: rgba(255,255,255,0.05);
+      border: 1px dashed rgba(255,255,255,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.85rem;
+    }
+
+    .photo-placeholder .ph-icon { font-size: 2rem; }
+
+    /* ── Footer ── */
+    .dev-footer {
+      background: #111;
+      color: #555;
+      text-align: center;
+      padding: 2.5rem;
+      font-size: 0.85rem;
+    }
+
+    .dev-footer a {
+      color: var(--accent);
+      margin-left: 6px;
+    }
+
+    /* ── Адаптив ── */
+    @media (max-width: 900px) {
+      .dev-hero-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 3rem;
+        padding: 3rem 2rem;
+      }
+      .dev-photo-main { width: 240px; height: 300px; }
+      .dev-badges { justify-content: center; }
+      .dev-hero-text .subtitle { margin: 0 auto 2rem; }
+
+      .dev-project-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .dev-project-photo { aspect-ratio: 16/9; }
+
+      .dev-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .dev-nav { padding: 0 20px; }
+      .dev-nav-logo { font-size: 1.1rem; }
+      .dev-facts { padding: 4rem 1.5rem; }
+      .dev-project { padding: 4rem 1.5rem; }
+      .dev-gallery { padding: 4rem 1.5rem; }
+      .dev-gallery-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Навігація -->
+<nav class="dev-nav">
+  <a href="index.html" class="dev-nav-back">← На головну</a>
+  <span class="dev-nav-logo">Cort</span>
+  <span style="width: 100px;"></span><!-- балансер -->
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HERO
+     ══════════════════════════════════════════ -->
+<section class="dev-hero">
+  <div class="dev-hero-inner">
+
+    <div class="dev-photo-wrap">
+      <!-- Заміни src на своє фото, наприклад images/developer-main.jpg -->
+      <img
+        src="images/developer-main.jpg"
+        alt="Ваше фото"
+        class="dev-photo-main"
+        onerror="this.style.background='#2c2c2e'; this.style.minHeight='400px';"
+      >
+      <div class="dev-photo-badge">Web Developer · 2026</div>
+    </div>
+
+    <div class="dev-hero-text">
+      <span class="dev-eyebrow">Розробник</span>
+
+      <!-- Заміни на своє ім'я -->
+      <h1>Давидов<br>Владислав</h1>
+
+      <!-- Заміни на свій опис -->
+      <p class="subtitle">
+        Студент, автор дипломної роботи «Cort Guitars» — сайту-візитки з інтерактивною грою, авторизацією та блогом.
+      </p>
+
+      <div class="dev-badges">
+        <span class="dev-badge">🎓 Студент</span>
+        <span class="dev-badge">💻 Frontend</span>
+        <span class="dev-badge">🔥 Firebase</span>
+        <span class="dev-badge">📍 Одеса</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ФАКТИ / КАРТКИ
+     ══════════════════════════════════════════ -->
+<section class="dev-facts">
+  <div class="dev-facts-inner">
+    <h2>Трохи про мене</h2>
+
+    <div class="dev-grid">
+
+      <div class="dev-card">
+        <div class="dev-card-icon">📍</div>
+        <h3>Місце проживання</h3>
+        <!-- Заміни на своє місто -->
+        <p>Одеса, Україна</p>
+        <p class="sub">Житловий масив імені Котовського</p>
+      </div>
+
+      <div class="dev-card">
+        <div class="dev-card-icon">🎓</div>
+        <h3>Навчальний заклад</h3>
+        <!-- Заміни на свій коледж -->
+        <p>ВСП "Фаховий коледж промислової автоматики та інформаційних технологій Одеського національного технологічного університету"</p>
+        <p class="sub">Спеціальність: 121 "Інженерія програмного забезпечення"</p>
+      </div>
+
+      <div class="dev-card">
+        <div class="dev-card-icon">📋</div>
+        <h3>Вид роботи</h3>
+        <p>Дипломна робота</p>
+        <p class="sub">2025–2026 навч. рік</p>
+      </div>
+
+      <div class="dev-card">
+        <div class="dev-card-icon">🎸</div>
+        <h3>Тема проєкту</h3>
+        <p>Сайт-візитка Cort Guitars</p>
+        <p class="sub">З інтерактивною грою</p>
+      </div>
+
+      <div class="dev-card">
+        <div class="dev-card-icon">⚡</div>
+        <h3>Досвід</h3>
+        <!-- Заміни на свій -->
+        <p>HTML / CSS / JS</p>
+        <p class="sub">Firebase · Git</p>
+      </div>
+
+      <div class="dev-card">
+        <div class="dev-card-icon">🌐</div>
+        <h3>Мови</h3>
+        <!-- Заміни на свої -->
+        <p>Українська</p>
+        <p class="sub">Англійська</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ПРО ПРОЄКТ
+     ══════════════════════════════════════════ -->
+<section class="dev-project">
+  <div class="dev-project-inner">
+
+    <div class="dev-project-text">
+      <span style="font-size:0.75rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:0.8rem;display:block;">Дипломна робота</span>
+      <h2>Про цей проєкт</h2>
+
+      <!-- Заміни на свій опис -->
+      <p>
+        Сайт-візитка Cort Guitars — це мій дипломний проєкт, реалізований повністю з нуля.
+        Від дизайну та верстки до серверної частини і ритм-гри, вбудованої прямо в браузер.
+      </p>
+      <p>
+        Проєкт має авторизацію через Firebase, блог з коментарями,
+        збереження рекордів та повноцінну адаптивну верстку.
+      </p>
+
+      <div class="tech-stack">
+        <span class="tech-tag">HTML5</span>
+        <span class="tech-tag">CSS3</span>
+        <span class="tech-tag">JavaScript</span>
+        <span class="tech-tag">Firebase Auth</span>
+        <span class="tech-tag">Firestore</span>
+        <span class="tech-tag">Web Audio</span>
+        <span class="tech-tag">Canvas API</span>
+      </div>
+    </div>
+
+    <div class="dev-project-photo">
+      <!-- Заміни на фото проєкту або ще одне своє фото -->
+      <img
+        src="images/developer-project.jpg"
+        alt="Скріншот проєкту"
+        onerror="this.parentElement.style.background='#f5f5f7'; this.style.display='none';"
+      >
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ГАЛЕРЕЯ ФОТО
+     ══════════════════════════════════════════ -->
+<section class="dev-gallery">
+  <h2>Фото</h2>
+
+  <div class="dev-gallery-grid">
+    <!-- Заміни src на свої фотографії -->
+
+    <img src="images/developer-photo1.jpg" alt="Фото 1"
+         onerror="this.outerHTML='<div class=&quot;photo-placeholder&quot;><span class=&quot;ph-icon&quot;>📷</span><span>Додай фото</span></div>'">
+
+    <img src="images/developer-photo2.jpg" alt="Фото 2"
+         onerror="this.outerHTML='<div class=&quot;photo-placeholder&quot;><span class=&quot;ph-icon&quot;>📷</span><span>Додай фото</span></div>'">
+
+    <img src="images/developer-photo3.jpg" alt="Фото 3"
+         onerror="this.outerHTML='<div class=&quot;photo-placeholder&quot;><span class=&quot;ph-icon&quot;>📷</span><span>Додай фото</span></div>'">
+
+  </div>
+</section>
+
+<!-- Footer -->
+<div class="dev-footer">
+  Cort Guitars · Дипломна робота · Давидов Владислав ·
+  <a href="index.html">Повернутись на головну</a>
+</div>
+
+</body>
+</html>

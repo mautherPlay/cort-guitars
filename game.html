@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Cort Guitar Game</title>
+  <link rel="stylesheet" href="game.css" />
+</head>
+<body>
+
+  <!-- =================================================================
+       ЕКРАН 1: ВИБІР СКЛАДНОСТІ
+       ================================================================= -->
+  <div id="screen-difficulty" class="screen active">
+
+    <a href="index.html" id="btn-home">🏠 На головну</a>
+
+    <div class="difficulty-wrapper">
+
+      <div class="logo-title">
+        <span class="logo-cort">CORT</span>
+        <span class="logo-sub">Guitar Rhythm</span>
+      </div>
+
+      <div id="user-panel">
+        <div id="user-avatar"></div>
+        <span id="user-email"></span>
+      </div>
+
+      <div id="best-score-block">
+        <span class="best-label">🏅 Кращі результати</span>
+        <div class="best-levels-row">
+
+          <div class="best-level-card" id="best-card-easy">
+            <span class="best-level-name">🎸 Легкий</span>
+            <div class="best-level-stats">
+              <div class="best-item">
+                <span class="best-item-label">РАХУНОК</span>
+                <span class="best-item-val" id="best-score-easy">0</span>
+              </div>
+              <div class="best-item">
+                <span class="best-item-label">КОМБО</span>
+                <span class="best-item-val" id="best-combo-easy">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="best-level-card" id="best-card-medium">
+            <span class="best-level-name">🎵 Середній</span>
+            <div class="best-level-stats">
+              <div class="best-item">
+                <span class="best-item-label">РАХУНОК</span>
+                <span class="best-item-val" id="best-score-medium">0</span>
+              </div>
+              <div class="best-item">
+                <span class="best-item-label">КОМБО</span>
+                <span class="best-item-val" id="best-combo-medium">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="best-level-card" id="best-card-hard">
+            <span class="best-level-name">🔥 Важкий</span>
+            <div class="best-level-stats">
+              <div class="best-item">
+                <span class="best-item-label">РАХУНОК</span>
+                <span class="best-item-val" id="best-score-hard">0</span>
+              </div>
+              <div class="best-item">
+                <span class="best-item-label">КОМБО</span>
+                <span class="best-item-val" id="best-combo-hard">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="best-level-card" id="best-card-endless">
+            <span class="best-level-name">♾️ Безкінечний</span>
+            <div class="best-level-stats">
+              <div class="best-item">
+                <span class="best-item-label">РАХУНОК</span>
+                <span class="best-item-val" id="best-score-endless">0</span>
+              </div>
+              <div class="best-item">
+                <span class="best-item-label">КОМБО</span>
+                <span class="best-item-val" id="best-combo-endless">0</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <p id="best-score-hint">Увійдіть в акаунт щоб зберігати результати</p>
+      </div>
+
+      <p class="choose-label">Обери рівень складності</p>
+
+      <div class="diff-cards">
+
+        <button class="diff-card" data-level="easy">
+          <span class="diff-icon">🎸</span>
+          <span class="diff-name">Легкий</span>
+          <span class="diff-desc">Lonely Day<br/>Повільний темп</span>
+        </button>
+
+        <button class="diff-card" data-level="medium">
+          <span class="diff-icon">🎵</span>
+          <span class="diff-name">Середній</span>
+          <span class="diff-desc">Середня швидкість<br/>Для досвідчених</span>
+        </button>
+
+        <button class="diff-card" data-level="hard">
+          <span class="diff-icon">🔥</span>
+          <span class="diff-name">Важкий</span>
+          <span class="diff-desc">Швидкі ноти<br/>Тільки для майстрів</span>
+        </button>
+
+        <button class="diff-card endless" data-level="endless">
+          <span class="diff-icon">♾️</span>
+          <span class="diff-name">Безкінечний</span>
+          <span class="diff-desc">Швидкість змінюється<br/>Грай до першої помилки</span>
+        </button>
+
+      </div>
+
+      <div id="modes-panel">
+
+        <div class="mode-row" id="practice-toggle-row">
+          <div class="mode-info">
+            <span class="mode-icon">🎯</span>
+            <div class="mode-text">
+              <span class="mode-name">Режим практики</span>
+              <span class="mode-desc">Програти неможливо, результат не зберігається</span>
+            </div>
+          </div>
+          <label class="mode-toggle">
+            <input type="checkbox" id="practice-mode-checkbox">
+            <span class="mode-track">
+              <span class="mode-thumb"></span>
+            </span>
+          </label>
+        </div>
+
+        <div class="mode-row mode-sub disabled" id="auto-hit-row">
+          <div class="mode-info">
+            <span class="mode-icon">⚡</span>
+            <div class="mode-text">
+              <span class="mode-name">Авто-знищення нот</span>
+              <span class="mode-desc">Нота зникає сама, коли досягає центральної лінії</span>
+            </div>
+          </div>
+          <label class="mode-toggle">
+            <input type="checkbox" id="auto-hit-checkbox" disabled>
+            <span class="mode-track">
+              <span class="mode-thumb"></span>
+            </span>
+          </label>
+        </div>
+
+        <div class="mode-row" id="hardcore-toggle-row">
+          <div class="mode-info">
+            <span class="mode-icon">💀</span>
+            <div class="mode-text">
+              <span class="mode-name">Хардкор</span>
+              <span class="mode-desc">Натиснув кнопку без ноти — одразу програв</span>
+            </div>
+          </div>
+          <label class="mode-toggle">
+            <input type="checkbox" id="hardcore-mode-checkbox">
+            <span class="mode-track">
+              <span class="mode-thumb"></span>
+            </span>
+          </label>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- =================================================================
+       ЕКРАН 2: ІГРОВЕ ПОЛЕ
+       ================================================================= -->
+  <div id="screen-game" class="screen">
+
+    <div id="game-header">
+      <button id="btn-back">← Назад</button>
+      <div id="hud">
+        <div class="hud-block">
+          <span class="hud-label">РАХУНОК</span>
+          <span class="hud-val" id="score-display">0</span>
+        </div>
+        <div class="hud-block">
+          <span class="hud-label">КОМБО</span>
+          <span class="hud-val" id="combo-display">x0</span>
+        </div>
+        <div class="hud-block">
+          <span class="hud-label">РІВЕНЬ</span>
+          <span class="hud-val" id="level-display">—</span>
+        </div>
+      </div>
+
+      <div id="header-right">
+        <div id="practice-indicator">🎯 ПРАКТИКА</div>
+        <div id="hardcore-indicator">💀 ХАРДКОР</div>
+        <div id="endless-timer">⏱ 0:00</div>
+      </div>
+    </div>
+
+    <div id="speed-warning"></div>
+
+    <div id="game-area">
+      <div id="tracks-container">
+
+        <div class="track" id="track-0">
+          <div class="string-line"></div>
+          <div class="notes-layer" id="notes-0"></div>
+        </div>
+        <div class="track" id="track-1">
+          <div class="string-line"></div>
+          <div class="notes-layer" id="notes-1"></div>
+        </div>
+        <div class="track" id="track-2">
+          <div class="string-line"></div>
+          <div class="notes-layer" id="notes-2"></div>
+        </div>
+        <div class="track" id="track-3">
+          <div class="string-line"></div>
+          <div class="notes-layer" id="notes-3"></div>
+        </div>
+        <div class="track" id="track-4">
+          <div class="string-line"></div>
+          <div class="notes-layer" id="notes-4"></div>
+        </div>
+
+        <div id="hit-zone">
+          <div class="hit-zone-glow"></div>
+          <div class="hit-zone-center-line"></div>
+          <span class="hit-zone-label">HIT ZONE</span>
+        </div>
+
+        <div id="countdown-overlay">
+          <div id="countdown-number">3</div>
+        </div>
+
+      </div>
+
+      <div id="buttons-row">
+        <button class="hit-btn" data-string="0">E</button>
+        <button class="hit-btn" data-string="1">A</button>
+        <button class="hit-btn" data-string="2">D</button>
+        <button class="hit-btn" data-string="3">G</button>
+        <button class="hit-btn" data-string="4">B</button>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- =================================================================
+       ЕКРАН 3: ПРОГРАШ
+       ================================================================= -->
+  <div id="screen-gameover" class="screen">
+    <div class="result-box">
+      <div class="result-icon">💔</div>
+      <h2 class="result-title">Ти програв!</h2>
+      <p class="result-score">Рахунок: <span id="final-score">0</span></p>
+      <p class="result-combo">Макс. комбо: <span id="final-combo">0</span></p>
+      <button id="btn-save" class="save-btn">💾 Зберегти результат</button>
+      <p id="save-status"></p>
+      <div class="result-btns">
+        <button id="btn-retry">Спробувати знову</button>
+        <button id="btn-menu">Головне меню</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =================================================================
+       ЕКРАН 4: ПЕРЕМОГА
+       ================================================================= -->
+  <div id="screen-win" class="screen">
+    <div class="result-box win">
+      <div class="result-icon">🏆</div>
+      <h2 class="result-title">Рівень пройдено!</h2>
+      <p class="win-level-name" id="win-level-name"></p>
+      <p class="result-score">Рахунок: <span id="win-score">0</span></p>
+      <p class="result-combo">Макс. комбо: <span id="win-combo">0</span></p>
+      <button id="btn-save-win" class="save-btn">💾 Зберегти результат</button>
+      <p id="save-status-win"></p>
+      <div class="result-btns">
+        <button id="btn-win-retry">Грати знову</button>
+        <button id="btn-win-menu">Головне меню</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="hit-feedback"></div>
+
+  <script type="module" src="game.js"></script>
+
+</body>
+</html>

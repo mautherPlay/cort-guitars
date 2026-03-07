@@ -1,0 +1,779 @@
+/* =====================================================================
+   CORT GUITAR RHYTHM GAME — game.css
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap');
+
+:root {
+  --bg:           #0a0a0f;
+  --bg2:          #11111a;
+  --accent:       #e8a020;
+  --accent2:      #ff4f1f;
+  --endless:      #a020e8;   
+  --endless2:     #e820b0;
+  --string-1:     #e84040;
+  --string-2:     #e8a020;
+  --string-3:     #40e860;
+  --string-4:     #4090e8;
+  --string-5:     #b040e8;
+  --hit-zone-y:   68%;
+  --note-size:    46px;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'Rajdhani', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: #fff;
+  font-family: var(--font-body);
+  overflow: hidden;
+  user-select: none;
+}
+
+.screen {
+  position: fixed; inset: 0;
+  display: none; align-items: center; justify-content: center;
+}
+.screen.active { display: flex; }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   КНОПКА "НА ГОЛОВНУ" — правий верхній кут, завжди поверх
+   ═══════════════════════════════════════════════════════════════════ */
+#btn-home {
+  position: fixed; top: 16px; right: 20px; z-index: 200;
+  display: inline-block;
+  padding: 8px 18px; border-radius: 10px;
+  border: 1px solid var(--accent);
+  background: #0a0a0fcc; color: var(--accent);
+  font-family: var(--font-body); font-size: 13px;
+  font-weight: 700; letter-spacing: 1px;
+  text-decoration: none; text-transform: uppercase;
+  cursor: pointer; backdrop-filter: blur(6px);
+  transition: background .2s, color .2s, transform .15s;
+}
+#btn-home:hover { background: var(--accent); color: #000; transform: translateY(-1px); }
+#btn-home:active { transform: scale(0.96); }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   ЕКРАН ВИБОРУ СКЛАДНОСТІ
+   ═══════════════════════════════════════════════════════════════════ */
+
+#screen-difficulty {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 0%, #1a1020 0%, transparent 70%),
+    var(--bg);
+  overflow-y: auto;
+  align-items: flex-start;
+}
+
+.difficulty-wrapper {
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 18px; padding: 40px 16px 32px;
+  width: 100%; max-width: 960px; margin: 0 auto;
+}
+
+.logo-title { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+.logo-cort {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 9vw, 100px); letter-spacing: 12px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 0 24px #e8a02066);
+}
+.logo-sub {
+  font-family: var(--font-body); font-size: clamp(11px, 2vw, 18px);
+  font-weight: 600; letter-spacing: 8px; color: #ffffff66;
+  text-transform: uppercase; margin-top: 4px;
+}
+
+/* Панель юзера */
+#user-panel {
+  display: none; align-items: center; gap: 10px;
+  background: #ffffff0a; border: 1px solid #ffffff18;
+  border-radius: 12px; padding: 8px 16px;
+}
+#user-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #000; font-family: var(--font-display); font-size: 16px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+#user-email {
+  font-size: 13px; color: #ffffffcc; font-weight: 600;
+  max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ── БЛОК КРАЩИХ РЕЗУЛЬТАТІВ ─────────────────────────────────────────
+   4 картки в рядок — тепер включає безкінечний режим.
+   На малих екранах переносяться в 2 рядки (flex-wrap).
+   ─────────────────────────────────────────────────────────────────── */
+#best-score-block {
+  background: #ffffff06; border: 1px solid #ffffff10;
+  border-radius: 16px; padding: 16px 20px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  width: 100%;
+}
+.best-label { font-size: 12px; letter-spacing: 3px; color: #ffffff44; text-transform: uppercase; }
+
+.best-levels-row {
+  display: flex; gap: 10px; width: 100%;
+  justify-content: center; flex-wrap: wrap;
+}
+
+.best-level-card {
+  flex: 1; min-width: 130px; max-width: 200px;
+  background: #ffffff07; border: 1px solid #ffffff12;
+  border-radius: 12px; padding: 10px 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  transition: border-color .25s, box-shadow .25s;
+}
+.best-level-card.active-level {
+  border-color: var(--accent);
+  box-shadow: 0 0 16px #e8a02033;
+}
+/* Картка безкінечного рівня — фіолетове підсвічування */
+#best-card-endless.active-level {
+  border-color: var(--endless);
+  box-shadow: 0 0 16px #a020e833;
+}
+
+.best-level-name { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #ffffffaa; text-transform: uppercase; }
+.best-level-stats { display: flex; gap: 14px; }
+.best-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.best-item-label { font-size: 9px; letter-spacing: 2px; color: #ffffff44; text-transform: uppercase; }
+.best-item-val { font-family: var(--font-display); font-size: 22px; color: var(--accent); letter-spacing: 1px; }
+
+#best-score-hint { font-size: 12px; color: #ffffff44; font-style: italic; }
+
+.choose-label { font-size: 15px; letter-spacing: 3px; color: #ffffff88; text-transform: uppercase; }
+
+/* ── КАРТКИ РІВНІВ ───────────────────────────────────────────────── */
+.diff-cards { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+.diff-card {
+  background: #ffffff08; border: 1px solid #ffffff18;
+  border-radius: 16px; padding: 20px 22px;
+  cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
+  min-width: 140px;
+  transition: transform .2s, background .2s, border-color .2s, box-shadow .2s;
+  font-family: var(--font-body); color: #fff;
+}
+.diff-card:hover {
+  transform: translateY(-6px) scale(1.04);
+  background: #ffffff14; border-color: var(--accent);
+  box-shadow: 0 12px 40px #e8a02033;
+}
+.diff-card:active { transform: scale(0.97); }
+
+/* Картка безкінечного рівня — фіолетова тема */
+.diff-card.endless { border-color: #a020e833; }
+.diff-card.endless:hover {
+  border-color: var(--endless);
+  box-shadow: 0 12px 40px #a020e833;
+}
+.diff-card.endless .diff-name { color: var(--endless); }
+
+.diff-icon { font-size: 32px; }
+.diff-name { font-family: var(--font-display); font-size: 22px; letter-spacing: 2px; color: var(--accent); }
+.diff-desc { font-size: 11px; color: #ffffff66; line-height: 1.5; text-align: center; }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   ІГРОВИЙ ЕКРАН
+   ═══════════════════════════════════════════════════════════════════ */
+
+#screen-game { flex-direction: column; background: var(--bg2); }
+
+#game-header {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px;
+  background: #000000aa; backdrop-filter: blur(8px);
+  border-bottom: 1px solid #ffffff10;
+  z-index: 10; flex-shrink: 0;
+}
+#btn-back {
+  background: none; border: 1px solid #ffffff22;
+  color: #ffffff88; padding: 6px 16px; border-radius: 8px;
+  font-family: var(--font-body); font-size: 14px;
+  cursor: pointer; transition: background .2s, color .2s;
+}
+#btn-back:hover { background: #ffffff14; color: #fff; }
+
+#hud { display: flex; gap: 28px; }
+.hud-block { display: flex; flex-direction: column; align-items: center; }
+.hud-label { font-size: 10px; letter-spacing: 3px; color: #ffffff44; text-transform: uppercase; }
+.hud-val { font-family: var(--font-display); font-size: 26px; color: var(--accent); letter-spacing: 1px; }
+
+/* ── ТАЙМЕР БЕЗКІНЕЧНОГО РЕЖИМУ ──────────────────────────────────────
+   Показується у правій частині шапки тільки для endless.
+   JS задає display:block при старті endless, none — для інших. */
+#endless-timer {
+  display: none;
+  font-family: var(--font-display); font-size: 22px;
+  color: var(--endless); letter-spacing: 2px;
+}
+
+/* ── ПОПЕРЕДЖЕННЯ ПРО ПРИСКОРЕННЯ ────────────────────────────────────
+   ВАЖЛИВО: використовуємо visibility:hidden замість display:none
+   щоб елемент завжди займав місце в layout і не зсував інтерфейс
+   при появі/зникненні. */
+#speed-warning {
+  visibility: hidden;      /* прихований але займає місце — нема зсуву */
+  opacity: 0;
+  width: 100%;
+  padding: 7px 20px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: #e84020;
+  background: #e8402011;
+  border-bottom: 1px solid #e8402033;
+  flex-shrink: 0;
+  transition: opacity .2s;
+  animation: none;
+}
+#speed-warning[style*="visible"] {
+  animation: warningPulse 1s ease-in-out infinite;
+}
+@keyframes warningPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+#game-area { flex: 1; width: 100%; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+
+#tracks-container { flex: 1; display: flex; position: relative; overflow: hidden; }
+
+.track { flex: 1; position: relative; border-right: 1px solid #ffffff08; overflow: hidden; }
+.track:last-of-type { border-right: none; }
+
+.string-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; transform: translateX(-50%); pointer-events: none; }
+#track-0 .string-line { background: linear-gradient(to bottom, transparent, var(--string-1) 30%, var(--string-1) 70%, transparent); }
+#track-1 .string-line { background: linear-gradient(to bottom, transparent, var(--string-2) 30%, var(--string-2) 70%, transparent); }
+#track-2 .string-line { background: linear-gradient(to bottom, transparent, var(--string-3) 30%, var(--string-3) 70%, transparent); }
+#track-3 .string-line { background: linear-gradient(to bottom, transparent, var(--string-4) 30%, var(--string-4) 70%, transparent); }
+#track-4 .string-line { background: linear-gradient(to bottom, transparent, var(--string-5) 30%, var(--string-5) 70%, transparent); }
+
+.notes-layer { position: absolute; inset: 0; pointer-events: none; }
+
+#hit-zone {
+  position: absolute; left: 0; right: 0;
+  top: var(--hit-zone-y); transform: translateY(-50%);
+  height: 120px; pointer-events: none; z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+}
+.hit-zone-glow {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, #e8a02018 15%, #e8a02040 50%, #e8a02018 85%, transparent 100%);
+  border-top: 2px solid #e8a02066; border-bottom: 2px solid #e8a02066;
+}
+/* Центральна горизонтальна лінія — гравець цілиться саме в неї */
+.hit-zone-center-line {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%; transform: translateY(-50%);
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    #e8a020cc 10%,
+    #ffffff     50%,
+    #e8a020cc 90%,
+    transparent 100%
+  );
+  box-shadow: 0 0 8px 2px #e8a02088, 0 0 20px 4px #e8a02044;
+  z-index: 2;
+}
+.hit-zone-label { position: relative; font-family: var(--font-display); font-size: 11px; letter-spacing: 5px; color: #e8a02055; z-index: 1; }
+
+/* ── ВІДЛІК ПЕРЕД СТАРТОМ ────────────────────────────────────────────
+   Overlay поверх треків. Прихований за замовчуванням.
+   JS додає клас .active — overlay стає видимим.
+   Цифра анімується через клас .countdown-pulse. */
+#countdown-overlay {
+  position: absolute; inset: 0;
+  background: #00000088;
+  backdrop-filter: blur(4px);
+  display: none;                    /* приховано за замовчуванням */
+  align-items: center; justify-content: center;
+  z-index: 50;
+}
+#countdown-overlay.active { display: flex; }
+
+#countdown-number {
+  font-family: var(--font-display);
+  font-size: clamp(100px, 20vw, 180px);
+  color: var(--accent);
+  text-shadow: 0 0 40px #e8a02088, 0 0 80px #e8a02044;
+  line-height: 1;
+}
+#countdown-number.countdown-pulse {
+  animation: countdownPulse .8s ease-out;
+}
+@keyframes countdownPulse {
+  0%   { transform: scale(1.4); opacity: 0.6; }
+  40%  { transform: scale(1.0); opacity: 1;   }
+  100% { transform: scale(0.95); opacity: 1;  }
+}
+
+.note {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: var(--note-size); height: var(--note-size); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 16px; font-weight: bold;
+  box-shadow: 0 0 14px 4px currentColor; z-index: 4;
+}
+.note[data-string="0"] { color: var(--string-1); background: #e8404022; border: 2px solid var(--string-1); }
+.note[data-string="1"] { color: var(--string-2); background: #e8a02022; border: 2px solid var(--string-2); }
+.note[data-string="2"] { color: var(--string-3); background: #40e86022; border: 2px solid var(--string-3); }
+.note[data-string="3"] { color: var(--string-4); background: #4090e822; border: 2px solid var(--string-4); }
+.note[data-string="4"] { color: var(--string-5); background: #b040e822; border: 2px solid var(--string-5); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   ПАНЕЛЬ РЕЖИМІВ (головне меню)
+   ═══════════════════════════════════════════════════════════════════ */
+#modes-panel {
+  width: 100%;
+  display: flex; flex-direction: column; gap: 2px;
+  border: 1px solid #ffffff0f;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0d0d0d;
+}
+
+.mode-row {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  gap: 16px;
+  background: #111;
+  transition: background .2s;
+  cursor: default;
+}
+.mode-row:not(:last-child) {
+  border-bottom: 1px solid #ffffff08;
+}
+.mode-row.mode-sub {
+  background: #0d0d0d;
+  padding-left: 36px; /* відступ — дочірній */
+}
+.mode-row.mode-sub.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.mode-row.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.mode-row.disabled .mode-toggle {
+  cursor: not-allowed;
+}
+
+.mode-info {
+  display: flex; align-items: center; gap: 12px; flex: 1;
+}
+.mode-icon {
+  font-size: 22px; flex-shrink: 0; width: 28px; text-align: center;
+}
+.mode-text {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.mode-name {
+  font-size: 14px; font-weight: 700;
+  color: #ffffffdd; letter-spacing: 0.5px;
+}
+.mode-desc {
+  font-size: 11px; color: #ffffff44; line-height: 1.3;
+}
+
+/* ── Новий дизайн повзунка ────────────────────────────────────────── */
+.mode-toggle {
+  position: relative; flex-shrink: 0;
+  width: 44px; height: 24px;
+  cursor: pointer;
+}
+.mode-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+.mode-track {
+  position: absolute; inset: 0;
+  border-radius: 24px;
+  background: #2a2a2a;
+  border: 1px solid #ffffff15;
+  transition: background .25s, border-color .25s;
+}
+.mode-thumb {
+  position: absolute;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #555;
+  top: 2px; left: 2px;
+  transition: transform .25s cubic-bezier(.4,0,.2,1), background .25s;
+  box-shadow: 0 1px 4px #00000066;
+}
+
+/* Увімкнено — зелений (практика і авто) */
+#practice-mode-checkbox:checked ~ .mode-track,
+#auto-hit-checkbox:checked ~ .mode-track {
+  background: #1a3a1a;
+  border-color: #40e86066;
+}
+#practice-mode-checkbox:checked ~ .mode-track .mode-thumb,
+#auto-hit-checkbox:checked ~ .mode-track .mode-thumb {
+  transform: translateX(20px);
+  background: #40e860;
+  box-shadow: 0 0 8px #40e86077;
+}
+
+/* Увімкнено — червоний (хардкор) */
+#hardcore-mode-checkbox:checked ~ .mode-track {
+  background: #3a1a1a;
+  border-color: #e8404066;
+}
+#hardcore-mode-checkbox:checked ~ .mode-track .mode-thumb {
+  transform: translateX(20px);
+  background: #e84040;
+  box-shadow: 0 0 8px #e8404077;
+}
+
+/* ── Індикатори у шапці гри ─────────────────────────────────────── */
+#hardcore-indicator {
+  display: none;
+  font-family: var(--font-display); font-size: 13px;
+  letter-spacing: 2px; color: #e84040;
+  background: #e8404018; border: 1px solid #e8404044;
+  border-radius: 6px; padding: 2px 8px;
+  animation: practicePulse 1s ease-in-out infinite;
+}
+#hardcore-indicator.active { display: block; }
+
+#buttons-row { display: flex; flex-shrink: 0; border-top: 1px solid #ffffff12; background: #000000cc; }
+.hit-btn {
+  flex: 1; height: 100px;
+  font-family: var(--font-display); font-size: 32px; letter-spacing: 2px;
+  border: none; border-right: 1px solid #ffffff10;
+  cursor: pointer; transition: filter .1s, transform .1s;
+}
+.hit-btn:last-child { border-right: none; }
+.hit-btn[data-string="0"] { background: #e8404018; color: var(--string-1); }
+.hit-btn[data-string="1"] { background: #e8a02018; color: var(--string-2); }
+.hit-btn[data-string="2"] { background: #40e86018; color: var(--string-3); }
+.hit-btn[data-string="3"] { background: #4090e818; color: var(--string-4); }
+.hit-btn[data-string="4"] { background: #b040e818; color: var(--string-5); }
+.hit-btn:active  { filter: brightness(2);   transform: scaleY(0.94); }
+.hit-btn.pressed { filter: brightness(2.2); }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   ЕКРАНИ РЕЗУЛЬТАТІВ
+   ═══════════════════════════════════════════════════════════════════ */
+
+#screen-gameover, #screen-win {
+  background: #00000099; backdrop-filter: blur(10px); z-index: 100;
+}
+.result-box {
+  background: #11111a; border: 1px solid #ffffff18;
+  border-radius: 24px; padding: 40px 52px;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  box-shadow: 0 0 60px #00000099;
+}
+.result-box.win { border-color: var(--accent); box-shadow: 0 0 60px #e8a02033; }
+.win-level-name { font-size: 14px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; margin-top: -8px; }
+.result-icon { font-size: 60px; }
+.result-title { font-family: var(--font-display); font-size: 46px; letter-spacing: 3px; color: var(--accent); }
+.result-score, .result-combo { font-size: 18px; color: #ffffffbb; }
+.result-score span, .result-combo span { color: #fff; font-weight: 700; }
+
+.save-btn {
+  display: none; padding: 12px 28px; border-radius: 12px;
+  border: 2px solid var(--accent);
+  background: linear-gradient(135deg, #e8a02022, #e8a02011);
+  color: var(--accent); font-family: var(--font-body); font-size: 16px;
+  font-weight: 700; letter-spacing: 1px; cursor: pointer;
+  transition: background .2s, transform .15s; width: 100%;
+}
+.save-btn.visible { display: block; }
+.save-btn:hover:not(:disabled) { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #000; transform: translateY(-2px); }
+.save-btn:active:not(:disabled) { transform: scale(0.97); }
+.save-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+#save-status { font-size: 13px; min-height: 18px; }
+#save-status.save-success { color: #40e860; }
+#save-status.save-error   { color: #e84040; }
+#save-status.save-info    { color: #ffffff66; }
+
+.result-btns { display: flex; gap: 16px; margin-top: 4px; }
+.result-btns button {
+  padding: 12px 28px; border-radius: 10px;
+  font-family: var(--font-body); font-size: 16px;
+  font-weight: 700; letter-spacing: 1px;
+  cursor: pointer; transition: transform .15s, filter .15s; border: none;
+}
+.result-btns button:first-child { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #000; }
+.result-btns button:last-child  { background: #ffffff14; color: #fff; border: 1px solid #ffffff22; }
+.result-btns button:hover  { filter: brightness(1.2); transform: translateY(-2px); }
+.result-btns button:active { transform: scale(0.96); }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   FEEDBACK + АНІМАЦІЇ
+   ═══════════════════════════════════════════════════════════════════ */
+
+#hit-feedback {
+  position: fixed; top: 60%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display); font-size: 52px; letter-spacing: 4px;
+  pointer-events: none; z-index: 999;
+  opacity: 0; text-shadow: 0 0 20px currentColor;
+}
+#hit-feedback.show { animation: feedbackPop .5s forwards; }
+
+@keyframes feedbackPop {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+  60%  { opacity: 1; transform: translate(-50%, -60%) scale(1);   }
+  100% { opacity: 0; transform: translate(-50%, -70%) scale(0.9); }
+}
+@keyframes noteHit {
+  0%   { transform: translateX(-50%) scale(1.4); opacity: 1; }
+  100% { transform: translateX(-50%) scale(0);   opacity: 0; }
+}
+.note.hit { animation: noteHit .2s ease-out forwards; }
+
+.track.miss-flash { animation: missFlash .3s ease-out; }
+@keyframes missFlash {
+  0%, 100% { background: transparent; }
+  50%       { background: #ff000022; }
+}
+@keyframes comboPulse {
+  0%   { transform: scale(1.4); color: #fff; }
+  100% { transform: scale(1);   color: var(--accent); }
+}
+.combo-pulse { animation: comboPulse .25s ease-out; }
+
+#tracks-container::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(to bottom, transparent, transparent 59px, #ffffff06 60px);
+  pointer-events: none; z-index: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE / TOUCH FIXES
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── iOS Safari: 100vh включає адресний рядок — фіксуємо через dvh ── */
+html, body {
+  height: 100dvh; /* dynamic viewport height — правильно на iOS */
+}
+.screen {
+  height: 100dvh;
+}
+
+/* ── Прибираємо синє підсвічування при тапі на iOS/Android ────────── */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Кнопки — touch-action: none щоб браузер не перехоплював скрол ── */
+.hit-btn {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ── #header-right — wrap якщо не влазить ──────────────────────────── */
+#header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ТЕЛЕФОН — до 480px (iPhone SE, iPhone 14, більшість Android)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+
+  /* ── Кнопка "На головну" — менша ───────────────────────────────── */
+  #btn-home {
+    font-size: 11px;
+    padding: 6px 12px;
+    top: 10px; right: 10px;
+  }
+
+  /* ── Меню: менший відступ зверху, компактніші gaps ─────────────── */
+  .difficulty-wrapper {
+    gap: 12px;
+    padding: 52px 12px 24px; /* зверху більше — бо є #btn-home */
+  }
+
+  /* ── Логотип менший ─────────────────────────────────────────────── */
+  .logo-cort {
+    font-size: clamp(44px, 14vw, 72px);
+    letter-spacing: 8px;
+  }
+  .logo-sub {
+    font-size: 10px;
+    letter-spacing: 5px;
+  }
+
+  /* ── Картки кращих результатів: 2×2 замість 4×1 ───────────────── */
+  .best-levels-row {
+    gap: 8px;
+  }
+  .best-level-card {
+    min-width: calc(50% - 4px);
+    max-width: calc(50% - 4px);
+    padding: 8px 10px;
+  }
+  .best-item-val {
+    font-size: 18px;
+  }
+
+  /* ── Картки рівнів: 2×2 замість 4×1 ───────────────────────────── */
+  .diff-cards {
+    gap: 8px;
+  }
+  .diff-card {
+    min-width: calc(50% - 4px);
+    max-width: calc(50% - 4px);
+    padding: 14px 10px;
+    gap: 6px;
+  }
+  .diff-icon { font-size: 26px; }
+  .diff-name { font-size: 18px; }
+  .diff-desc { font-size: 10px; }
+
+  /* ── Панель режимів: трохи компактніша ─────────────────────────── */
+  .mode-row {
+    padding: 11px 14px;
+    gap: 12px;
+  }
+  .mode-row.mode-sub {
+    padding-left: 26px;
+  }
+  .mode-name { font-size: 13px; }
+  .mode-desc { font-size: 10px; }
+  .mode-icon { font-size: 18px; width: 22px; }
+
+  /* ── Ігровий екран: компактна шапка ────────────────────────────── */
+  #game-header {
+    padding: 7px 10px;
+  }
+  #btn-back {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+  #hud {
+    gap: 14px;
+  }
+  .hud-label { font-size: 8px; letter-spacing: 2px; }
+  .hud-val   { font-size: 20px; }
+
+  /* ── Індикатори практики/хардкору — менші ──────────────────────── */
+  #practice-indicator,
+  #hardcore-indicator {
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+  }
+  #endless-timer {
+    font-size: 16px;
+  }
+
+  /* ── Кнопки удару — вища зона дотику на телефоні ───────────────── */
+  .hit-btn {
+    height: 80px;
+    font-size: 24px;
+  }
+
+  /* ── Ноти трохи менші ──────────────────────────────────────────── */
+  :root {
+    --note-size: 38px;
+  }
+  .note { font-size: 13px; }
+
+  /* ── Екрани результатів — вужчі paddings ───────────────────────── */
+  .result-box {
+    padding: 28px 24px;
+    margin: 0 12px;
+    gap: 10px;
+  }
+  .result-icon  { font-size: 48px; }
+  .result-title { font-size: 36px; }
+  .result-score, .result-combo { font-size: 15px; }
+  .result-btns {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .result-btns button {
+    padding: 12px 20px;
+    font-size: 15px;
+    width: 100%;
+  }
+  .save-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  /* ── Feedback текст ─────────────────────────────────────────────── */
+  #hit-feedback { font-size: 40px; }
+
+  /* ── Speed warning ──────────────────────────────────────────────── */
+  #speed-warning { font-size: 14px; padding: 5px 12px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   МАЛИЙ ТЕЛЕФОН — до 360px (iPhone SE 1st gen, маленькі Android)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 360px) {
+  .difficulty-wrapper { gap: 10px; padding: 48px 10px 20px; }
+  .logo-cort { font-size: 40px; letter-spacing: 6px; }
+  .hud { gap: 10px; }
+  .hud-val { font-size: 18px; }
+  .hit-btn { height: 70px; font-size: 20px; }
+  :root { --note-size: 34px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ПЛАНШЕТ — 481px до 768px
+   ═══════════════════════════════════════════════════════════════════ */
+@media (min-width: 481px) and (max-width: 768px) {
+  .difficulty-wrapper { gap: 14px; padding: 36px 16px 28px; }
+
+  .diff-card {
+    min-width: 130px;
+    padding: 16px 14px;
+  }
+
+  .best-level-card {
+    min-width: 120px;
+  }
+
+  .hit-btn { height: 90px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LANDSCAPE ТЕЛЕФОН — горизонтальна орієнтація
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* У landscape ігровий екран: кнопки нижче, треки вищі відносно */
+  .hit-btn { height: 60px; font-size: 20px; }
+  #game-header { padding: 4px 10px; }
+  .hud-val { font-size: 18px; }
+
+  /* Меню — горизонтальний скрол щоб не стискати */
+  .difficulty-wrapper { padding: 44px 16px 16px; gap: 10px; }
+  .diff-cards { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+  .diff-card { min-width: 120px; flex-shrink: 0; }
+}

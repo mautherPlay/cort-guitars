@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Корисні статті</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+    }
+
+    header {
+      padding: 20px 10%;
+      background: #000;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    header a {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* Стилі для тексту статей */
+.article p {
+  font-size: 1.1rem;         /* трохи менше, ніж заголовок */
+  line-height: 1.7;          /* збільшений міжрядковий інтервал */
+  max-width: 800px;          /* обмежує довжину рядка для легкого читання */
+  margin-bottom: 1.2rem;     /* відстань між абзацами */
+  color: #e0e0e0;            /* світлий, легкий для читання на темному фоні */
+  word-wrap: break-word;      /* щоб довгі слова не лізли за межі блоку */
+}
+
+    /* Трохи відступу між заголовком статті і текстом */
+.article h2 {
+  margin-bottom: 0.8rem;
+}
+
+    .comments {
+      margin-top: 20px;
+    }
+
+    .comment {
+      background: #2a2a2a;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .comment small {
+      color: #aaa;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      margin-top: 10px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #f1c40f;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .login-warning {
+      color: #ff5a5f;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .developer-tag{
+  background:#ff9800;
+  color:white;
+  font-size:12px;
+  padding:2px 6px;
+  border-radius:5px;
+  margin-left:6px;
+}
+
+.delete-btn{
+  margin-top:6px;
+  padding:4px 8px;
+  background:#e53935;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.delete-btn:hover{
+  background:#c62828;
+}
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html">← Назад</a>
+  <div>Корисні статті</div>
+</header>
+
+<div class="container" id="articlesContainer"></div>
+
+<!-- Firebase/Скрипт -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    getDocs, 
+    query, 
+    orderBy, 
+    serverTimestamp,
+    deleteDoc,
+    doc
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDTrXDCi_O9UMQRbP5tqvstgZZxq5y9kmA",
+    authDomain: "useraut-58945.firebaseapp.com",
+    projectId: "useraut-58945",
+    storageBucket: "useraut-58945.firebasestorage.app",
+    messagingSenderId: "181937486925",
+    appId: "1:181937486925:web:9257dd4a234abf4ec47004"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  const ADMIN_EMAIL = "vvladzhiv@gmail.com";
+  const articles = [
+  {
+    id:"strings",
+    title:"Як правильно обрати струни?",
+    content:"У Cort ми знаємо, що струни – це серце твоєї гітари. Щоб обрати їх правильно, потрібно враховувати товщину, матеріал і стиль гри. Легкі струни 9–42 підходять для швидкого соло і техніки бендів, середні 10–46 універсальні, а важкі 11–52 додають punch у ритмічні партії. Нікелеві струни підкреслюють теплий тон Cort, а сталеві або покриті – дзвінкий, сучасний драйв. Також звертай увагу на довжину мензури і тип гітари. Міняй струни регулярно – Cort завжди гарантує чистий, насичений звук."
+  },
+  {
+    id:"tuning",
+    title:"Як правильно налаштувати гітару?",
+    content:"Cort вже поставляє гітари максимально близько до ідеальної інтонації, але щоб звук розкрився повністю, потрібно встановити стандартний строй EADGBE за допомогою тюнера, перевірити інтонацію на 12-му ладі – звук відкритої струни і ноти на 12-му ладі мають збігатися в октаві, відрегулювати екшн через гайки бріджа, щоб гра була комфортною, і при необхідності підкрутити truss rod. Навіть новачок відчує, як Cort звучить у руках, а професіонал може налаштувати тон під свій стиль."
+  },
+  {
+    id:"care",
+    title:"Догляд за гітарою",
+    content:"Гітара Cort – це інвестиція в твій звук. Протирай корпус і гриф м’якою тканиною після гри, обробляй ладову дошку спеціальним маслом для деревини, зберігай гітару у жорсткому кейсі або на стійці подалі від сонця і вологості. Регулярна заміна струн і перевірка ладів забезпечує чистий, насичений тон Cort навіть через роки використання."
+  },
+  {
+    id:"wood",
+    title:"Яке дерево краще для гітари?",
+    content:"Cort підбирає деревину з урахуванням звукових властивостей. Альдер дає легкий, збалансований тон, махагоні – насичений і теплий, палисандр або ебен на ладовій дошці додає чіткості атаці і довгий sustain. Вибір дерева залежить від стилю гри, але Cort робить так, щоб будь-яка модель звучала гармонійно і професійно."
+  },
+  {
+    id:"pickup",
+    title:"Вибір пікапів",
+    content:"Пікапи Cort створені для різних стилів. Single-coil дає прозорий тон, ідеальний для блюзу і класичного року, humbucker – щільний звук з мінімумом шумів для металу і хард-року, а активні пікапи додають потужності для соло і драйву. Щоб обрати, подумай про позицію пікапів – брідж для атаки, нейтраль для балансу, нек для чистоти – Cort вже оптимізує звук для максимальної глибини."
+  },
+  {
+    id:"bridge",
+    title:"Брідж і його вплив на звук",
+    content:"Брідж – контакт між струнами і тілом, що визначає sustain і характер звучання. Фіксований брідж дає стабільну інтонацію і довгий sustain, тремоло або Floyd Rose додає dive-bomb і плавне вібрато. Cort налаштовує брідж так, щоб твої акценти звучали виразно, а кожна нота розкривалася природно."
+  },
+  {
+    id:"fretboard",
+    title:"Гриф та ладова дошка",
+    content:"Гриф Cort продуманий під комфорт і контроль. Профіль грифа C-shape, U-shape або V-shape підбирай під форму руки і стиль. Лади medium або jumbo дають чисті бенди та легкі слеми. Матеріали палисандр або ебен додають чіткості атаці і тепла звуку. Cort робить так, щоб рука рухалася природно, а звук був чистим і насиченим."
+  },
+  {
+    id:"amp",
+    title:"Підключення до підсилювача",
+    content:"Cort робить підключення простим і ефективним. Використовуй якісний кабель 6.3 mm, починай з низької гучності і поступово додавай. Регулятори gain, volume і tone дають повний контроль над чистим або дисторшн-звуком. Підключення Cort до будь-якого підсилювача дає максимальну динаміку, punch і живий звук, який відчуваєш у кожній ноті."
+  }
+];
+
+  const container = document.getElementById("articlesContainer");
+
+  articles.forEach(article => {
+    const articleDiv = document.createElement("div");
+    articleDiv.className = "article";
+
+    articleDiv.innerHTML = `
+      <h2>${article.title}</h2>
+      <p>${article.content}</p>
+      <div class="comments" id="comments-${article.id}"></div>
+      <textarea placeholder="Ваш коментар..." id="input-${article.id}"></textarea>
+      <button onclick="addComment('${article.id}')">Додати коментар</button>
+      <div class="login-warning" id="warning-${article.id}"></div>
+    `;
+
+    container.appendChild(articleDiv);
+    loadComments(article.id);
+  });
+
+  window.addComment = async (articleId) => {
+
+  const user = auth.currentUser;
+  const input = document.getElementById(`input-${articleId}`);
+  const warning = document.getElementById(`warning-${articleId}`);
+
+  if (!user) {
+    warning.textContent = "Щоб залишити коментар, увійдіть в аккаунт.";
+    return;
+  }
+
+  if (!input.value.trim()) return;
+
+  await addDoc(collection(db, "articles", articleId, "comments"), {
+    email: user.email,
+    text: input.value,
+    isDeveloper: user.email === ADMIN_EMAIL,
+    createdAt: serverTimestamp()
+  });
+
+  input.value = "";
+  warning.textContent = "";
+  loadComments(articleId);
+};
+
+  async function loadComments(articleId) {
+
+  const commentsContainer = document.getElementById(`comments-${articleId}`);
+  commentsContainer.innerHTML = "";
+
+  const q = query(
+    collection(db, "articles", articleId, "comments"),
+    orderBy("createdAt", "desc")
+  );
+
+  const snapshot = await getDocs(q);
+
+  snapshot.forEach(docItem => {
+
+    const data = docItem.data();
+
+    let developerTag = "";
+    if (data.email === ADMIN_EMAIL) {
+      developerTag = `<span class="developer-tag">Розробник</span>`;
+    }
+
+    const commentDiv = document.createElement("div");
+    commentDiv.className = "comment";
+
+    commentDiv.innerHTML = `
+      ${data.text}
+      <br>
+      <small>${data.email} ${developerTag}</small>
+    `;
+
+    const user = auth.currentUser;
+
+    // Якщо адмін — показуємо кнопку видалення
+    if (user && user.email === ADMIN_EMAIL) {
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Видалити";
+      deleteBtn.className = "delete-btn";
+
+      deleteBtn.onclick = async () => {
+        await deleteDoc(doc(db, "articles", articleId, "comments", docItem.id));
+        loadComments(articleId);
+      };
+
+      commentDiv.appendChild(deleteBtn);
+    }
+
+    commentsContainer.appendChild(commentDiv);
+
+  });
+
+}
+</script>
+
+</body>
+</html>
