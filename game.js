@@ -122,9 +122,31 @@ function playDeepKick() {
 
 let songAudio = null;
 
+// ── Preload: завантажуємо всі треки одразу при старті сторінки ──────
+// Це усуває затримку між стартом гри і початком музики на хостингу
+const AUDIO_SRCS = [
+  'audio/deathnotelvl.mp3',
+  'audio/bluepjano.mp3',
+  'audio/pirates.mp3',
+  'audio/crow.mp3',
+];
+const audioCache = {};
+AUDIO_SRCS.forEach(src => {
+  const a = new Audio();
+  a.preload = 'auto';
+  a.src = src;
+  audioCache[src] = a;
+});
+
 function startSong(src, loop = false) {
   stopSong();
-  songAudio        = new Audio(src);
+  // Беремо з кешу якщо є — файл вже завантажений браузером
+  if (audioCache[src]) {
+    songAudio = audioCache[src];
+    songAudio.currentTime = 0;
+  } else {
+    songAudio = new Audio(src);
+  }
   songAudio.volume = 0.75;
   songAudio.loop   = loop;
   songAudio.play().catch(() => {
