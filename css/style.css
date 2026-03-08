@@ -168,7 +168,6 @@ img { max-width: 100%; height: auto; display: block; }
   from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
-}
 
 /* Dropdown відкривається тільки кліком (JS toggle .open) */
 .nav-dropdown.open .nav-dropdown-menu {
@@ -584,7 +583,6 @@ section { padding: 6rem 2rem; text-align: center; }
 @keyframes modalIn {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
-}
 }
 
 .modal-content img {
