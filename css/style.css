@@ -143,8 +143,7 @@ img { max-width: 100%; height: auto; display: block; }
   transition: transform 0.25s;
 }
 
-.nav-dropdown:hover .nav-dropdown-trigger::after,
-.nav-dropdown.open    .nav-dropdown-trigger::after {
+.nav-dropdown.open .nav-dropdown-trigger::after {
   transform: rotate(180deg);
 }
 
@@ -170,8 +169,8 @@ img { max-width: 100%; height: auto; display: block; }
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-.nav-dropdown:hover .nav-dropdown-menu,
-.nav-dropdown.open   .nav-dropdown-menu {
+/* Dropdown відкривається тільки кліком (JS toggle .open) */
+.nav-dropdown.open .nav-dropdown-menu {
   display: block;
 }
 
@@ -1007,13 +1006,22 @@ section { padding: 6rem 2rem; text-align: center; }
 
   .nav-left {
     display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
     padding: 0;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border-top: 1px solid rgba(0,0,0,0.08);
-    width: 100%;
-    order: 3;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    z-index: 998;
   }
 
   .nav-left.open { display: flex; }
