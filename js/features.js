@@ -30,7 +30,6 @@ const featureData = {
 document.addEventListener("DOMContentLoaded", () => {
 
   const modal = document.getElementById("featureModal");
-  const modalImg = document.getElementById("featureModalImg");
   const modalTitle = document.getElementById("featureModalTitle");
   const modalText = document.getElementById("featureModalDesc");
   const modalVideo = document.getElementById("featureModalVideo");
@@ -43,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = featureData[key];
       if(!data) return;
 
-      modalImg.src = data.img;
       modalTitle.textContent = data.title;
       modalText.textContent = data.text;
       modalVideoSource.src = data.video;
