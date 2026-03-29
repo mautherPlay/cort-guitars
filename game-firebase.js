@@ -1,9 +1,10 @@
-
 //   gameScores/{userId}:
-//     email: "..."
-//     easy:   { bestScore, bestCombo, savedAt }
-//     medium: { bestScore, bestCombo, savedAt }
-//     hard:   { bestScore, bestCombo, savedAt }
+//     email:    "..."
+//     nickname: "..."   ← новий рядок
+//     easy:     { bestScore, bestCombo, savedAt }
+//     medium:   { bestScore, bestCombo, savedAt }
+//     hard:     { bestScore, bestCombo, savedAt }
+//     endless:  { bestScore, bestCombo, savedAt }
 
 import { auth, db } from './js/firebase.js';
 
@@ -13,6 +14,11 @@ import {
   doc,
   getDoc,
   setDoc,
+  getDocs,
+  collection,
+  orderBy,
+  query,
+  limit,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -21,48 +27,54 @@ import {
 // ВНУТРІШНІЙ СТАН
 // ─────────────────────────────────────────────────────────────────────
 
-let currentUser = null;
-
-// Кеш усіх трьох рекордів одразу:
-// { easy: {bestScore, bestCombo} | null,
-//   medium: {bestScore, bestCombo} | null,
-//   hard: {bestScore, bestCombo} | null }
-let cachedScores = { easy: null, medium: null, hard: null };
+let currentUser   = null;
+let cachedScores  = { easy: null, medium: null, hard: null, endless: null };
+let cachedNickname = null;
 
 
 // ─────────────────────────────────────────────────────────────────────
 // ПУБЛІЧНІ ФУНКЦІЇ
 // ─────────────────────────────────────────────────────────────────────
 
-export function getCurrentUser() {
-  return currentUser;
-}
-
-// Повертає кеш рекордів для всіх рівнів
-export function getCachedScores() {
-  return cachedScores;
-}
+export function getCurrentUser()   { return currentUser; }
+export function getCachedScores()  { return cachedScores; }
+export function getCachedNickname(){ return cachedNickname; }
 
 /**
  * initGameFirebase({ onUserLoggedIn, onUserLoggedOut })
- * Запускає слухач авторизації. Спрацьовує одразу при завантаженні.
- * onUserLoggedIn(user, scores) — scores = { easy, medium, hard }
  */
 export function initGameFirebase({ onUserLoggedIn, onUserLoggedOut }) {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
-      console.log("Гра: користувач увійшов:", user.email);
 
-      // Завантажуємо всі три рекорди одним запитом
-      const scores = await loadAllScores(user.uid);
+      const docRef  = doc(db, 'gameScores', user.uid);
+      const docSnap = await getDoc(docRef);
+
+      const scores = { easy: null, medium: null, hard: null, endless: null };
+      cachedNickname = null;
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        cachedNickname = data.nickname || null;
+
+        ['easy', 'medium', 'hard', 'endless'].forEach(level => {
+          if (data[level] && data[level].bestScore) {
+            scores[level] = {
+              bestScore: data[level].bestScore || 0,
+              bestCombo: data[level].bestCombo || 0,
+            };
+          }
+        });
+      }
+
       cachedScores = scores;
+      onUserLoggedIn(user, scores, cachedNickname);
 
-      onUserLoggedIn(user, scores);
     } else {
-      currentUser = null;
-      cachedScores = { easy: null, medium: null, hard: null };
-      console.log("Гра: користувач не залогінений");
+      currentUser    = null;
+      cachedNickname = null;
+      cachedScores   = { easy: null, medium: null, hard: null, endless: null };
       onUserLoggedOut();
     }
   });
@@ -70,15 +82,9 @@ export function initGameFirebase({ onUserLoggedIn, onUserLoggedOut }) {
 
 /**
  * saveScore({ score, combo, level })
- * Зберігає результат для конкретного рівня.
- * Перезаписує тільки якщо новий результат кращий за попередній для цього рівня.
- *
- * Повертає: { saved, isNewBest, error? }
  */
 export async function saveScore({ score, combo, level }) {
-  if (!currentUser) {
-    return { saved: false, isNewBest: false, error: 'not_logged_in' };
-  }
+  if (!currentUser) return { saved: false, isNewBest: false, error: 'not_logged_in' };
 
   try {
     const userDocRef = doc(db, 'gameScores', currentUser.uid);
@@ -87,27 +93,17 @@ export async function saveScore({ score, combo, level }) {
     let isNewBest = false;
 
     if (docSnap.exists()) {
-      // Документ є — перевіряємо рекорд ТІЛЬКИ для цього рівня
-      const data     = docSnap.data();
-      const levelData = data[level]; // data.easy / data.medium / data.hard
+      const data      = docSnap.data();
+      const levelData = data[level];
       const prevBest  = levelData ? (levelData.bestScore || 0) : 0;
-
-      if (score > prevBest) {
-        isNewBest = true;
-      } else {
-        // Результат не кращий для цього рівня — не зберігаємо
-        return { saved: false, isNewBest: false };
-      }
+      if (score > prevBest) { isNewBest = true; }
+      else { return { saved: false, isNewBest: false }; }
     } else {
-      // Документ не існує — перший результат юзера
       isNewBest = true;
     }
 
-    // Зберігаємо тільки поле конкретного рівня, не торкаємось інших.
-    // merge: true гарантує що easy/medium/hard не перезапишуть один одного.
     await setDoc(userDocRef, {
       email: currentUser.email,
-      // Зберігаємо під ключем рівня: 'easy', 'medium' або 'hard'
       [level]: {
         bestScore: score,
         bestCombo: combo,
@@ -115,9 +111,7 @@ export async function saveScore({ score, combo, level }) {
       }
     }, { merge: true });
 
-    // Оновлюємо кеш для цього рівня
     cachedScores[level] = { bestScore: score, bestCombo: combo };
-
     return { saved: true, isNewBest: true };
 
   } catch (error) {
@@ -126,42 +120,87 @@ export async function saveScore({ score, combo, level }) {
   }
 }
 
-
-// ─────────────────────────────────────────────────────────────────────
-// ПРИВАТНА ФУНКЦІЯ
-// ─────────────────────────────────────────────────────────────────────
-
 /**
- * loadAllScores(uid)
- * Завантажує один документ і витягує рекорди для всіх трьох рівнів.
- * Повертає: { easy, medium, hard } де кожен або { bestScore, bestCombo } або null
+ * saveNickname(nickname)
+ * Зберігає нікнейм користувача. Можна викликати повторно — перезаписує.
+ * Валідація: 3–20 символів, тільки літери/цифри/пробіл/підкреслення/дефіс.
+ * Повертає { saved, error? }
  */
-async function loadAllScores(uid) {
+export async function saveNickname(nickname) {
+  if (!currentUser) return { saved: false, error: 'not_logged_in' };
+
+  const trimmed = nickname.trim();
+
+  // Валідація довжини
+  if (trimmed.length < 3) return { saved: false, error: 'too_short' };
+  if (trimmed.length > 20) return { saved: false, error: 'too_long' };
+
+  // Тільки букви (латиниця+кирилиця), цифри, пробіл, _ -
+  if (!/^[\p{L}0-9 _\-]+$/u.test(trimmed)) {
+    return { saved: false, error: 'invalid_chars' };
+  }
+
   try {
-    const userDocRef = doc(db, 'gameScores', uid);
-    const docSnap    = await getDoc(userDocRef);
+    const userDocRef = doc(db, 'gameScores', currentUser.uid);
+    await setDoc(userDocRef, {
+      email:    currentUser.email,
+      nickname: trimmed,
+    }, { merge: true });
 
-    // Порожній результат за замовчуванням
-    const result = { easy: null, medium: null, hard: null };
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-
-      // Витягуємо дані для кожного рівня якщо вони є
-      ['easy', 'medium', 'hard'].forEach(level => {
-        if (data[level] && data[level].bestScore) {
-          result[level] = {
-            bestScore: data[level].bestScore || 0,
-            bestCombo: data[level].bestCombo || 0,
-          };
-        }
-      });
-    }
-
-    return result;
+    cachedNickname = trimmed;
+    return { saved: true };
 
   } catch (error) {
-    console.error('Помилка завантаження результатів:', error);
-    return { easy: null, medium: null, hard: null };
+    console.error('Помилка збереження нікнейму:', error);
+    return { saved: false, error: error.message };
+  }
+}
+
+/**
+ * loadLeaderboard()
+ * Повертає топ-3 для:
+ *   - totalScore: сума easy.bestScore + medium.bestScore + hard.bestScore
+ *   - endless:    endless.bestScore
+ *
+ * Повертає { total: [...], endless: [...] }
+ * Кожен елемент: { displayName, score }
+ */
+export async function loadLeaderboard() {
+  try {
+    const colRef  = collection(db, 'gameScores');
+    const snap    = await getDocs(colRef);
+
+    const totalArr   = [];
+    const endlessArr = [];
+
+    snap.forEach(docSnap => {
+      const d = docSnap.data();
+      const displayName = d.nickname || d.email || '???';
+
+      // Сума балів easy + medium + hard
+      const total =
+        ((d.easy    && d.easy.bestScore)    ? d.easy.bestScore    : 0) +
+        ((d.medium  && d.medium.bestScore)  ? d.medium.bestScore  : 0) +
+        ((d.hard    && d.hard.bestScore)    ? d.hard.bestScore    : 0);
+
+      if (total > 0) totalArr.push({ displayName, score: total });
+
+      // Endless
+      const endlessScore = (d.endless && d.endless.bestScore) ? d.endless.bestScore : 0;
+      if (endlessScore > 0) endlessArr.push({ displayName, score: endlessScore });
+    });
+
+    // Сортуємо та беремо топ-3
+    totalArr.sort((a, b) => b.score - a.score);
+    endlessArr.sort((a, b) => b.score - a.score);
+
+    return {
+      total:   totalArr.slice(0, 3),
+      endless: endlessArr.slice(0, 3),
+    };
+
+  } catch (error) {
+    console.error('Помилка завантаження лідерборду:', error);
+    return { total: [], endless: [] };
   }
 }

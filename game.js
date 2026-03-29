@@ -1,7 +1,7 @@
 // game.js — головний ігровий скрипт
 'use strict';
 
-import { initGameFirebase, saveScore, getCurrentUser } from './game-firebase.js';
+import { initGameFirebase, saveScore, getCurrentUser, saveNickname, loadLeaderboard, getCachedNickname } from './game-firebase.js';
 import { EASY_PATTERN,   EASY_SONG_DURATION   } from './easy-song.js';
 import { MEDIUM_PATTERN, MEDIUM_SONG_DURATION } from './medium-song.js';
 import { HARD_PATTERN,   HARD_SONG_DURATION   } from './hard-song.js';
@@ -218,8 +218,9 @@ const saveStatusWin = document.getElementById('save-status-win');
 const hitFeedback  = document.getElementById('hit-feedback');
 
 const userPanel  = document.getElementById('user-panel');
-const userAvatar = document.getElementById('user-avatar');
-const userEmail  = document.getElementById('user-email');
+const userAvatar      = document.getElementById('user-avatar');
+const userDisplayName = document.getElementById('user-displayname');
+const userEmailSub    = document.getElementById('user-email-sub');
 const bestHint   = document.getElementById('best-score-hint');
 
 const bestScoreEls = {
@@ -295,13 +296,15 @@ hardcoreCheckbox.addEventListener('change', () => {
 // ═════════════════════════════════════════════════════════════════════
 
 initGameFirebase({
-  onUserLoggedIn(user, scores) {
+  onUserLoggedIn(user, scores, nickname) {
     userPanel.style.display = 'flex';
-    userAvatar.textContent  = user.email[0].toUpperCase();
-    userEmail.textContent   = user.email;
+    userAvatar.textContent  = (nickname || user.email)[0].toUpperCase();
+    userDisplayName.textContent = nickname || user.email;
+    userEmailSub.textContent    = nickname ? user.email : '';
     bestHint.style.display  = 'none';
     updateBestScoreDisplay(scores);
     btnSave.classList.add('visible');
+    renderLeaderboard();
   },
   onUserLoggedOut() {
     userPanel.style.display = 'none';
@@ -903,3 +906,111 @@ function clearAllNotes() {
 // ═════════════════════════════════════════════════════════════════════
 
 showScreen('difficulty');
+
+// ═══════════════════════════════════════════════════════════════════
+// НІКНЕЙМ
+// ═══════════════════════════════════════════════════════════════════
+
+const nicknameForm    = document.getElementById('nickname-form');
+const nicknameInput   = document.getElementById('nickname-input');
+const nicknameStatus  = document.getElementById('nickname-status');
+const btnSetNickname  = document.getElementById('btn-set-nickname');
+const btnSaveNickname = document.getElementById('btn-save-nickname');
+const btnCancelNick   = document.getElementById('btn-cancel-nickname');
+
+btnSetNickname.addEventListener('click', () => {
+  nicknameInput.value   = getCachedNickname() || '';
+  nicknameStatus.textContent = '';
+  nicknameForm.style.display = 'flex';
+  nicknameInput.focus();
+});
+
+btnCancelNick.addEventListener('click', () => {
+  nicknameForm.style.display = 'none';
+});
+
+btnSaveNickname.addEventListener('click', async () => {
+  const val = nicknameInput.value.trim();
+  nicknameStatus.style.color = '#86868b';
+  nicknameStatus.textContent = 'Зберігаємо...';
+  btnSaveNickname.disabled = true;
+
+  const result = await saveNickname(val);
+
+  btnSaveNickname.disabled = false;
+
+  if (result.saved) {
+    const user = getCurrentUser();
+    userAvatar.textContent      = val[0].toUpperCase();
+    userDisplayName.textContent = val;
+    userEmailSub.textContent    = user ? user.email : '';
+    nicknameStatus.style.color  = '#32d74b';
+    nicknameStatus.textContent  = '✓ Нікнейм збережено!';
+    setTimeout(() => { nicknameForm.style.display = 'none'; }, 1200);
+    renderLeaderboard(); // Оновлюємо лідерборд
+  } else {
+    nicknameStatus.style.color = '#ff5a5f';
+    if (result.error === 'too_short')      nicknameStatus.textContent = 'Мінімум 3 символи.';
+    else if (result.error === 'too_long')  nicknameStatus.textContent = 'Максимум 20 символів.';
+    else if (result.error === 'invalid_chars') nicknameStatus.textContent = 'Тільки букви, цифри, _ і -.';
+    else if (result.error === 'not_logged_in') nicknameStatus.textContent = 'Спочатку увійдіть.';
+    else nicknameStatus.textContent = 'Помилка. Спробуйте ще.';
+  }
+});
+
+// Enter у полі нікнейму
+nicknameInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') btnSaveNickname.click();
+  if (e.key === 'Escape') btnCancelNick.click();
+});
+
+
+// ═══════════════════════════════════════════════════════════════════
+// ТАБЛИЦЯ ЛІДЕРІВ
+// ═══════════════════════════════════════════════════════════════════
+
+const MEDALS = ['🥇', '🥈', '🥉'];
+
+function renderLeaderboard() {
+  const lbTotal   = document.getElementById('lb-total');
+  const lbEndless = document.getElementById('lb-endless');
+  if (!lbTotal || !lbEndless) return;
+
+  lbTotal.innerHTML   = '<div class="lb-loading">Завантаження...</div>';
+  lbEndless.innerHTML = '<div class="lb-loading">Завантаження...</div>';
+
+  loadLeaderboard().then(({ total, endless }) => {
+
+    if (total.length === 0) {
+      lbTotal.innerHTML = '<div class="lb-empty">Ще немає результатів</div>';
+    } else {
+      lbTotal.innerHTML = total.map((p, i) =>
+        `<div class="lb-row">
+          <span class="lb-medal">${MEDALS[i]}</span>
+          <span class="lb-name">${escapeHtml(p.displayName)}</span>
+          <span class="lb-score">${p.score.toLocaleString()}</span>
+        </div>`
+      ).join('');
+    }
+
+    if (endless.length === 0) {
+      lbEndless.innerHTML = '<div class="lb-empty">Ще немає результатів</div>';
+    } else {
+      lbEndless.innerHTML = endless.map((p, i) =>
+        `<div class="lb-row">
+          <span class="lb-medal">${MEDALS[i]}</span>
+          <span class="lb-name">${escapeHtml(p.displayName)}</span>
+          <span class="lb-score">${p.score.toLocaleString()}</span>
+        </div>`
+      ).join('');
+    }
+  });
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}

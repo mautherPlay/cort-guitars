@@ -24,7 +24,19 @@
 
       <div id="user-panel">
         <div id="user-avatar"></div>
-        <span id="user-email"></span>
+        <div id="user-info">
+          <span id="user-displayname"></span>
+          <span id="user-email-sub"></span>
+        </div>
+        <button id="btn-set-nickname" title="Змінити нікнейм">✏️</button>
+      </div>
+
+      <!-- Форма нікнейму (схована за замовчуванням) -->
+      <div id="nickname-form" style="display:none;">
+        <input id="nickname-input" type="text" maxlength="20" placeholder="Введи нікнейм (3–20 символів)">
+        <button id="btn-save-nickname">Зберегти</button>
+        <button id="btn-cancel-nickname">Скасувати</button>
+        <p id="nickname-status"></p>
       </div>
 
       <div id="best-score-block">
@@ -171,6 +183,30 @@
           </label>
         </div>
 
+      </div>
+
+      <!-- ── Таблиця лідерів ── -->
+      <div id="leaderboard-block">
+        <span class="best-label">🏆 Таблиця лідерів</span>
+        <div class="leaderboard-tables">
+
+          <div class="lb-table">
+            <div class="lb-table-title">⭐ Загальний рахунок</div>
+            <div class="lb-table-subtitle">Easy + Medium + Hard</div>
+            <div id="lb-total">
+              <div class="lb-loading">Завантаження...</div>
+            </div>
+          </div>
+
+          <div class="lb-table">
+            <div class="lb-table-title">♾️ Нескінченний режим</div>
+            <div class="lb-table-subtitle">Найвищий результат</div>
+            <div id="lb-endless">
+              <div class="lb-loading">Завантаження...</div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
     </div>
